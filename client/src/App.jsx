@@ -13,7 +13,7 @@ import SummaryApi from './common/SummaryApi';
 import { handleAddItemCart } from './store/cartProduct'
 import GlobalProvider from './provider/GlobalProvider';
 import { FaCartShopping } from "react-icons/fa6";
-import CartMobileLink from './components/CartMobile';
+import CartMobileLink from './components/cartMobile';
 
 function App() {
   const dispatch = useDispatch()
