@@ -12,7 +12,7 @@ import {
   searchProduct,
   updateProductDetails,
 } from "../controllers/product.controller.js"; // Import product-related controllers
-import { admin } from "../middleware/Admin.js";
+import { admin } from "../middleware/admin.js";
 
 // import { admin } from '../middleware/Admin.js'
 // You can uncomment this later to add Admin-only route protection

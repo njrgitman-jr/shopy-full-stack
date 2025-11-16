@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import logoShopyit from "../assets/shopyit5.png";
+import logoShopyit from "../assets/shopyit5.PNG";
 import Search from "./Search";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
