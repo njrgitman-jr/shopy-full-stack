@@ -1,7 +1,7 @@
 import express from "express";
 import { dashboardOverview } from "../controllers/dashboard.controller.js";
 import auth from "../middleware/auth.js";
-import { admin } from "../middleware/admin.js";
+import { admin } from "../middleware/Admin.js";
 
 const dashboardRouter = express.Router();
 
