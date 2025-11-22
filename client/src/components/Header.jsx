@@ -184,19 +184,24 @@ const Header = () => {
               {/* Cart button */}
               <button
                 onClick={() => setOpenCartSection(true)}
-                className="flex items-center gap-2 bg-green-800 hover:bg-green-700 px-3 py-2 rounded text-white"
+                className="flex items-center gap-2 bg-green-700 hover:bg-green-700 px-3 py-2 rounded text-white"
               >
                 <div className="animate-bounce">
-                  <BsCart4 size={26} />
+                  <BsCart4
+                    size={26}
+                    className="text-white"
+                  />
                 </div>
-                <div className="font-semibold text-sm">
+                <div className="font-semibold text-sm text-white">
                   {cartItem[0] ? (
-                    <div>
-                      <p>{totalQty} Items</p>
-                      <p>{DisplayPriceInRupees(totalPrice)}</p>
+                    <div className="text-white">
+                      <p className="text-white">{totalQty} items</p>
+                      <p className="text-white">
+                        {DisplayPriceInRupees(totalPrice)}
+                      </p>
                     </div>
                   ) : (
-                    <p>My Cart</p>
+                    <p className="text-white">My Cart</p>
                   )}
                 </div>
               </button>
