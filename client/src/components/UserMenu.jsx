@@ -135,7 +135,7 @@ const UserMenu = ({ close }) => {
           </Link>
         )}
 
-        {isDELV(user.role) && (
+        
           <Link
             onClick={handleClose}
             to={"/dashboard/deliverOrders"}
@@ -144,7 +144,7 @@ const UserMenu = ({ close }) => {
             <HiOutlineShoppingCart className="text-gray-500" />{" "}
             <span>Deliver Orders</span>
           </Link>
-        )}
+        
 
         {/* Regular User Links */}
         <Link
