@@ -25,8 +25,8 @@ import CartMobile from "../pages/CartMobile";
 import CheckoutPage from "../pages/CheckoutPage";
 import Success from "../pages/Success";
 import Cancel from "../pages/Cancel";
-import AdminOrders from "../pages/AdminOrdersPage";
 import DeliverOrders from "../pages/DeliverOrders";
+import AdminOrdersPage from "../pages/AdminOrdersPage";
 
 const router = createBrowserRouter([
   {
@@ -74,18 +74,19 @@ const router = createBrowserRouter([
             element: <Profile />,
           },
           {
-            path: "myorders",
-            element: <MyOrders />,
-          },
-          {
             path: "address",
             element: <Address />,
+          },
+
+          {
+            path: "myorders",
+            element: <MyOrders />,
           },
           {
             path: "adminOrders",
             element: (
               <AdminPermision>
-                <AdminOrders />
+                <AdminOrdersPage />
               </AdminPermision>
             ),
           },
@@ -99,7 +100,6 @@ const router = createBrowserRouter([
             ),
           },
 
-          
           {
             path: "category",
             element: (
