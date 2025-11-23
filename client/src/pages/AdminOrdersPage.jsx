@@ -7,27 +7,7 @@ import Loading from "../components/Loading";        // reuse your existing Loadi
 import NoData from "../components/NoData";          // reuse NoData
 import CofirmBox from "../components/CofirmBox";    // reuse your confirm box (used for status change prompt)
 
-/**
- * AdminOrdersPage
- *
- * Full admin orders management page (Option 1)
- * - Server-driven pagination (page, limit)
- * - Inline assignment of delivery person (role "DELV")
- * - Update order status
- * - View product snapshot modal
- * - Refresh and loading states
- *
- * Where to place this file:
- * - client/src/pages/AdminOrdersPage.jsx
- *
- * Integration (client):
- * - Add a route in your app's router: <Route path="/admin/orders" element={<AdminOrdersPage/>} />
- * - Ensure SummaryApi.getAllOrdersAdmin, assignOrderToDelivery, updateOrderStatus and getDeliveryPersons are present.
- *
- * Integration (server):
- * - Make sure server/controllers/adminOrder.controller.js getOrdersAdmin supports pagination params ?page & ?limit
- *   (see integration notes at bottom for exact code to add/replace on server).
- */
+
 
 const statusOptions = [
   "Pending",
