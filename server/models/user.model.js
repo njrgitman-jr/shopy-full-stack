@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["SUPERADMIN", "ADMIN", "USER"],
+      enum: ["ADMIN", "USER", "DELV"],
       default: "USER",
     },
     login_history: [

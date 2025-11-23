@@ -19,7 +19,7 @@ export async function CashOnDeliveryOrderController(request, response) {
           image: el.productId.image,
         },
         paymentId: "",
-        payment_status: "CASH ON DELIVERY",
+        payment_status: "COD Pending",    //CASH ON DELIVERY",
         delivery_address: addressId,
         subTotalAmt: subTotalAmt,
         totalAmt: totalAmt,

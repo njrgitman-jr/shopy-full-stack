@@ -82,7 +82,7 @@ const Login = () => {
             Session expired ... relogin again
           </p>
         )}
-        <p>Login to Shopyit (Preview 1.1)</p>
+        <p>Login to Shopyit (Preview 2)</p>
         <form
           className="grid gap-4 py-4"
           onSubmit={handleSubmit}

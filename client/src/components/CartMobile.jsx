@@ -22,7 +22,7 @@ const CartMobileLink = () => {
           <div className="bg-green-400 px-2 py-1 rounded text-neutral-100 text-sm  flex items-center justify-between gap-3 lg:hidden">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-green-500 rounded w-fit">
-                <FaCartShopping />
+                <FaCartShopping className="animate-bounce"/>
               </div>
               <div className="text-xs">
                 <p>{totalQty} items</p>
@@ -35,7 +35,7 @@ const CartMobileLink = () => {
               className="flex items-center gap-1"
             >
               <span className="text-sm">View Cart.</span>
-              <FaCaretRight className="animate-bounce" />
+              <FaCaretRight />
             </Link>
           </div>
         </div>

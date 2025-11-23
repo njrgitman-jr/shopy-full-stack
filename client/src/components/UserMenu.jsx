@@ -18,6 +18,7 @@ import {
   HiOutlineLogout,
 } from "react-icons/hi";
 import isAdmin from "../utils/isAdmin";
+import isDELV from "../utils/isDelv";
 
 const UserMenu = ({ close }) => {
   const user = useSelector((state) => state.user);
@@ -49,7 +50,7 @@ const UserMenu = ({ close }) => {
       <div className="font-semibold">My Account</div>
       <div className="text-sm flex items-center gap-2">
         <span className="max-w-52 text-ellipsis line-clamp-1">
-          <span className="italic text-xs text-green-600">Welcome Back,</span>{" "}
+          <span className="italic text-xs text-green-600">Welcome,</span>{" "}
           <span className="bg-gray-200 text-gray-800 px-2 py-0.5 rounded-md text-xs font-medium">
             {user.name || user.mobile}
           </span>{" "}
@@ -103,7 +104,7 @@ const UserMenu = ({ close }) => {
             <span>Sub Category</span>
           </Link>
         )}
-         {isAdmin(user.role) && (
+        {isAdmin(user.role) && (
           <Link
             onClick={handleClose}
             to={"/dashboard/upload-product"}
@@ -120,6 +121,28 @@ const UserMenu = ({ close }) => {
           >
             <HiOutlineShoppingCart className="text-gray-500" />{" "}
             <span>Product</span>
+          </Link>
+        )}
+
+        {isAdmin(user.role) && (
+          <Link
+            onClick={handleClose}
+            to={"/dashboard/adminOrders"}
+            className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
+          >
+            <HiOutlineShoppingCart className="text-gray-500" />{" "}
+            <span>Manage Orders</span>
+          </Link>
+        )}
+
+        {isDELV(user.role) && (
+          <Link
+            onClick={handleClose}
+            to={"/dashboard/deliverOrders"}
+            className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
+          >
+            <HiOutlineShoppingCart className="text-gray-500" />{" "}
+            <span>Deliver Orders</span>
           </Link>
         )}
 

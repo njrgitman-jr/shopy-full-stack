@@ -153,6 +153,30 @@ const SummaryApi = {
     url: "/api/order/order-list",
     method: "get",
   },
+
+  // ADMIN orders
+  getAllOrdersAdmin: {
+    url: "/api/admin/order/get",
+    method: "get",
+  },
+  assignOrderToDelivery: {
+    url: "/api/admin/order/assign",
+    method: "put",
+  },
+  updateOrderStatus: {
+    url: "/api/admin/order/update-status",
+    method: "put",
+  },
+  getOrderByOrderIdAdmin: {
+    url: "/api/admin/order/get", // note: we'll call /api/admin/order/get/:orderId directly in Axios usage
+    method: "get",
+  },
+
+  // users
+  getDeliveryPersons: {
+    url: "/api/user/delivery-persons",
+    method: "get",
+  },
 };
 
 export default SummaryApi;

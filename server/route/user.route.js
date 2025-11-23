@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   forgotPasswordController,
+  getDeliveryPersons,
   loginController,
   logoutController,
   refreshToken,
@@ -15,6 +16,7 @@ import {
 
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
+import { admin } from "../middleware/admin.js";
 
 //create endpoints for each method in user.controller.js ... then used in summaryApi.js
 const userRouter = Router();
@@ -29,5 +31,11 @@ userRouter.put("/verify-forgot-password-otp", verifyForgotPasswordOtp);
 userRouter.put("/reset-password", resetpassword);
 userRouter.post("/refresh-token", refreshToken);
 userRouter.get("/user-details", auth, userDetails); //'endpoint',exported controller name ..also add auth middleware so that user can access the id from middleware
+
+// server/route/user.route.js (add import and route)
+
+
+userRouter.get("/delivery-persons", auth, admin, getDeliveryPersons);
+
 
 export default userRouter;
