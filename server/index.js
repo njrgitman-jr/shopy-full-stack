@@ -19,7 +19,7 @@ import addressRouter from "./route/address.route.js";
 import orderRouter from "./route/order.route.js";
 import dashboardRouter from "./route/dashboard.route.js";
 
-
+import adminOrderRouter from "./route/adminorder.route.js"; // Import admin order routes
 
 const app = express();
 
@@ -28,8 +28,8 @@ const app = express();
 // (Local + Vercel Prod + Vercel Preview)
 // =============================
 const allowedOrigins = [
-  /^https:\/\/.*\.vercel\.app$/,   // Any Vercel domain
-  /^http:\/\/localhost:\d+$/,      // Any localhost (5173, 3000, 8080)
+  /^https:\/\/.*\.vercel\.app$/, // Any Vercel domain
+  /^http:\/\/localhost:\d+$/, // Any localhost (5173, 3000, 8080)
 ];
 
 app.use(
@@ -85,8 +85,7 @@ app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/dashboard", dashboardRouter);
 
-
-
+app.use("/api/admin", adminOrderRouter); // Add the route here
 
 // ========= START SERVER =========
 connectDB().then(() => {
