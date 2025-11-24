@@ -141,7 +141,7 @@ export default function AdminOrdersPage() {
               <th className="px-4 py-2 text-left">Total</th>
               <th className="px-4 py-2 text-left">Payment Status</th>
               <th className="px-4 py-2 text-left">Delivery Status</th>
-              <th className="px-4 py-2 text-left">Delivery Person</th>
+              {/* <th className="px-4 py-2 text-left">Delivery Person</th> */}
               <th className="px-4 py-2 text-left">Assigned At</th>
               <th className="px-4 py-2 text-left">Order Date</th>
               <th className="px-4 py-2 text-left">Actions</th>
@@ -229,7 +229,7 @@ export default function AdminOrdersPage() {
                       )}
                     </td>
 
-                    <td className="px-4 py-2 text-sm">
+                    {/* <td className="px-4 py-2 text-sm">
                       {isEditing ? (
                         <select
                           className="border rounded px-2 py-1 max-w-xs"
@@ -246,7 +246,7 @@ export default function AdminOrdersPage() {
                       ) : (
                         order.delivery_person_name || order.delivery_person?.name || "—"
                       )}
-                    </td>
+                    </td> */}
 
                     <td className="px-4 py-2 text-sm">
                       {order.assignedAt ? new Date(order.assignedAt).toLocaleString() : "—"}
