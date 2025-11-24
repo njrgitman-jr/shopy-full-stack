@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   forgotPasswordController,
-  getDeliveryPersons,
+  // getDeliveryPersons,
   loginController,
   logoutController,
   refreshToken,
@@ -35,7 +35,7 @@ userRouter.get("/user-details", auth, userDetails); //'endpoint',exported contro
 // server/route/user.route.js (add import and route)
 
 
-userRouter.get("/delivery-persons", auth, admin, getDeliveryPersons);
+// userRouter.get("/delivery-persons", auth, admin, getDeliveryPersons);
 
 
 export default userRouter;

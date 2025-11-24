@@ -179,10 +179,10 @@ const SummaryApi = {
   },
 
   // (you already have getDeliveryPersons in server route and SummaryApi should include:)
-  getDeliveryPersons: {
-    url: `${baseURL}/api/user/delivery-persons`,
-    method: "get",
-  },
+  // getDeliveryPersons: {
+  //   url: `${baseURL}/api/user/delivery-persons`,
+  //   method: "get",
+  // },
 
 };
 
