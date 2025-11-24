@@ -167,8 +167,7 @@ const SummaryApi = {
     method: "get",
   },
 
-  
-  // ==== ADMIN ORDERS ====
+    // ==== ADMIN ORDERS ====
   adminListOrders: {
     url: `${baseURL}/api/admin/orders`,
     method: "get",
@@ -178,6 +177,7 @@ const SummaryApi = {
     url: `${baseURL}/api/admin/orders/update`,
     method: "put",
   },
+
 
 
 };
