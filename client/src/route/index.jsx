@@ -26,7 +26,8 @@
   import Success from "../pages/Success";
   import Cancel from "../pages/Cancel";
   import DeliverOrders from "../pages/DeliverOrders";
-  import AdminOrdersPage from "../pages/AdminOrdersPage";
+import AdminOrderPage from "../pages/AdminOrderPage";
+  
 
   const router = createBrowserRouter([
     {
@@ -85,8 +86,8 @@
             {
               path: "adminOrders",
               element: (
-                <AdminPermision>
-                  <AdminOrdersPage />
+                <AdminPermision>  
+                  <AdminOrderPage />
                 </AdminPermision>
               ),
             },
