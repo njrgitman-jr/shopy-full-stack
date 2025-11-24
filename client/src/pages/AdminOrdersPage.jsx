@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Axios from "../utils/Axios";
 import SummaryApi from "../common/SummaryApi";
-import successAlert from "../utils/successAlert"; // you provided earlier
-import Swal from "sweetalert2";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const PAGE_LIMIT = 10;
 
@@ -67,7 +67,7 @@ export default function AdminOrdersPage() {
       setTotal(data.total || 0);
     } catch (err) {
       console.error(err);
-      Swal.fire("Error", err?.response?.data?.message || "Failed to load orders", "error");
+        toast.success("Error", err?.response?.data?.message || "Failed to load orders", "error");
     } finally {
       setLoading(false);
     }
@@ -106,14 +106,15 @@ export default function AdminOrdersPage() {
         data: payload,
       });
 
-      successAlert("Order updated");
+      toast.success("Order updated");
       // Refresh single order or list
       await fetchOrders();
       setEditingId(null);
       setEditData({});
     } catch (err) {
       console.error(err);
-      Swal.fire("Error", err?.response?.data?.message || "Failed to update order", "error");
+ 
+       toast.success("Error", err?.response?.data?.message || "Failed to update order", "error");
     } finally {
       setLoading(false);
     }
