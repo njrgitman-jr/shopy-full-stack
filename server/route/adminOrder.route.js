@@ -6,12 +6,12 @@ import {
   adminUpdateOrder,
 } from "../controllers/adminOrder.controller.js";
 
-const adminOrderRouter = Router();
+const adminorderRouter = Router();
 
 // GET ALL ORDERS (ADMIN ONLY)
-adminOrderRouter.get("/orders", auth, admin, adminGetAllOrders);
+adminorderRouter.get("/orders", auth, admin, adminGetAllOrders);
 
 // UPDATE ORDER INLINE (ADMIN ONLY)
-adminOrderRouter.put("/orders/update",  adminUpdateOrder);
+adminorderRouter.put("/orders/update",  adminUpdateOrder);
 
-export default adminOrderRouter;
+export default adminorderRouter;
