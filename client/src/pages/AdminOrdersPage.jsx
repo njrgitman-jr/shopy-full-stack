@@ -72,7 +72,7 @@ function AdminOrdersPage() {
         <table className="min-w-full bg-white shadow-lg rounded-lg border">
           <thead className="bg-gray-200 text-sm font-semibold text-gray-700">
             <tr>
-              <th className="p-3 border">Order ID</th>
+              <th className="p-3 border">Order IDXX</th>
               <th className="p-3 border">Customer</th>
               <th className="p-3 border">Delivery Address</th>
               <th className="p-3 border">Product Name</th>
