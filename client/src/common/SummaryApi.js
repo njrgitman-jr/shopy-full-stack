@@ -167,22 +167,8 @@ const SummaryApi = {
     method: "get",
   },
 
-  // inside SummaryApi (client/src/common/SummaryApi.js)
-  // admin orders (admin-only)
-  getAdminOrders: {
-    url: `${baseURL}/api/admin/orders`,
-    method: "get",
-  },
-  updateAdminOrder: {
-    url: `${baseURL}/api/admin/orders/:id`, // :id replaced client-side
-    method: "put",
-  },
+  
 
-  // (you already have getDeliveryPersons in server route and SummaryApi should include:)
-  // getDeliveryPersons: {
-  //   url: `${baseURL}/api/user/delivery-persons`,
-  //   method: "get",
-  // },
 
 };
 
