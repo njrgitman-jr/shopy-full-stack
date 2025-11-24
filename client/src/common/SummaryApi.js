@@ -1,4 +1,4 @@
-// client/src/common/SummaryApi.js
+// client/src/common/SummaryApi.js     This builds the full URL for every API endpoint
 export const baseURL = import.meta.env.VITE_API_URL || "";
 
 const SummaryApi = {

@@ -1,4 +1,4 @@
-//#2 2:48:00
+//#2 2:48:00   makes Axios automatically prefix EVERY request with baseURL
 import axios from "axios";
 import SummaryApi, { baseURL } from "../common/SummaryApi";
 import { useNavigate } from "react-router-dom"; // you may need a custom redirect function if outside React
