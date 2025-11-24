@@ -12,6 +12,6 @@ const adminOrderRouter = Router();
 adminOrderRouter.get("/orders", auth, admin, adminGetAllOrders);
 
 // UPDATE ORDER INLINE (ADMIN ONLY)
-adminOrderRouter.put("/orders/update", auth, admin, adminUpdateOrder);
+adminOrderRouter.put("/orders/update",  adminUpdateOrder);
 
 export default adminOrderRouter;
