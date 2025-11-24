@@ -53,16 +53,26 @@ export const updateOrder = async (req, res) => {
     const { payment_status, orderStatus, delivery_person } = req.body;
 
     const order = await OrderModel.findById(id);
-    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
+    if (!order)
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
 
     // If updating delivery_person, validate the user exists and is DELV
     if (delivery_person) {
       const user = await UserModel.findById(delivery_person);
       if (!user) {
-        return res.status(400).json({ success: false, message: "Delivery person not found" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Delivery person not found" });
       }
       if (user.role !== "DELV") {
-        return res.status(400).json({ success: false, message: "Selected user is not a delivery person" });
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message: "Selected user is not a delivery person",
+          });
       }
       order.delivery_person = user._id;
       order.delivery_person_name = user.name || "";

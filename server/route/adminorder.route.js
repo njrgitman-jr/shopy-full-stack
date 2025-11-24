@@ -1,6 +1,7 @@
 // server/route/adminorder.route.js
 import { Router } from "express";
-import { listOrders, updateOrder } from "../controllers/adminorder.controller.js";
+
+import { listOrders,updateOrder } from "../controllers/adminOrder.controller.js";
 import auth from "../middleware/auth.js";
 import { admin } from "../middleware/admin.js";
 
