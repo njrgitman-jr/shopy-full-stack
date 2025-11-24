@@ -19,6 +19,7 @@ import addressRouter from "./route/address.route.js";
 import orderRouter from "./route/order.route.js";
 import dashboardRouter from "./route/dashboard.route.js";
 
+import adminOrderRouter from "./route/adminOrder.route.js";
 
 
 const app = express();
@@ -85,7 +86,7 @@ app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/dashboard", dashboardRouter);
 
-
+app.use("/api/admin", adminOrderRouter)
 
 // ========= START SERVER =========
 connectDB().then(() => {
