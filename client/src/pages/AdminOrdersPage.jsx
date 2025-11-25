@@ -13,7 +13,7 @@ function AdminOrdersPage() {
     // Fetch orders from the API
     const fetchOrders = async () => {
       try {
-        const response = await Axios.get(SummaryApi.getOrderItems.url);
+        const response = await Axios.get(SummaryApi.getAdminOrders.url);
         setOrders(response.data.data);
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {

@@ -32,3 +32,4 @@ userRouter.post("/refresh-token", refreshToken);
 userRouter.get("/user-details", auth, userDetails); //'endpoint',exported controller name ..also add auth middleware so that user can access the id from middleware
 
 export default userRouter;
+
