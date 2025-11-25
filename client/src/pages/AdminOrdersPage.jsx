@@ -67,7 +67,7 @@ export default function AdminOrdersPage() {
       setLoading(true);
       try {
         const [ordersRes, delRes] = await Promise.all([
-          Axios.get(SummaryApi.adminListOrders.url),
+          Axios.get(SummaryApi.getOrderItems.url),
           Axios.get(SummaryApi.getDeliveryPersons.url || SummaryApi.getDeliveryPersons), // just in case
         ]);
         setOrders(ordersRes.data.data || []);
