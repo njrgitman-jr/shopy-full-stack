@@ -167,20 +167,23 @@ const SummaryApi = {
     method: "get",
   },
 
-    // ==== ADMIN ORDERS ====
-// ==== ADMIN ORDERS ====
-getAdminOrders: {
-  url: `${baseURL}/api/admin/orders`,
-  method: "get",
-},
-
-updateAdminOrder: {
-  url: `${baseURL}/api/admin/orders`, // final URL is /orders/:orderId
-  method: "put",
-},
-
-
-
+  // ==== ADMIN ORDERS (new paths under /api/order) ====
+  adminListOrders: {
+    url: `${baseURL}/api/order/admin-list`,
+    method: "get",
+  },
+  getDeliveryPersons: {
+    url: `${baseURL}/api/order/delivery-persons`,
+    method: "get",
+  },
+  assignDelivery: {
+    url: `${baseURL}/api/order/assign-delivery`, // append /:orderId when calling
+    method: "put",
+  },
+  adminUpdateStatus: {
+    url: `${baseURL}/api/order/update-status`, // append /:orderId when calling
+    method: "put",
+  },
 };
 
 export default SummaryApi;

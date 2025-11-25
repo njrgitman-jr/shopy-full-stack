@@ -19,7 +19,6 @@ import addressRouter from "./route/address.route.js";
 import orderRouter from "./route/order.route.js";
 import dashboardRouter from "./route/dashboard.route.js";
 
- import adminOrderRouter from "./route/adminorder.route.js"; // Import admin order routes for the endpoint part "order"
 
 const app = express();
 
@@ -84,9 +83,6 @@ app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/dashboard", dashboardRouter);
-
- app.use("/api/admin", adminOrderRouter); // Add the route here   for the base usrl part "/api/admin"
-
 
 
 // ========= START SERVER =========
