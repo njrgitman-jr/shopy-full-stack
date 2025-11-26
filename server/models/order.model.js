@@ -1,97 +1,76 @@
-// server/models/order.model.js
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    // 🧍 USER WHO PLACED THE ORDER
+    orderId: { type: String, required: true, unique: true },
+
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    // 📦 UNIQUE ORDER ID
-    orderId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
-    // 📦 PRODUCT (later can become array)
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "product",
       required: true,
     },
 
-    // 📄 PRODUCT SNAPSHOT
     product_details: {
-      name: { type: String },
-      image: { type: Array, default: [] },
+      type: Object,
+      required: true,
     },
 
-    // 💳 PAYMENT DETAILS
-    paymentId: { type: String, default: "" },
-
-    payment_status: {
-      type: String,
-      enum: ["COD Pending", "COD Paid", "COD Failed", "COD Refunded"],
-      default: "COD Pending",
-    },
-
-    // 📍 DELIVERY ADDRESS
     delivery_address: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "address",
       required: true,
     },
 
-    // 💰 AMOUNTS
+    /** 
+     * Order Status 
+     * (do NOT use strict enums because it breaks if you add a new status later)
+     */
+    orderStatus: {
+      type: String,
+      default: "Processing",
+    },
+
+    /**
+     * Payment Status 
+     * Your DB already uses: "CASH ON DELIVERY"
+     */
+    payment_status: {
+      type: String,
+      default: "COD Pending",
+    },
+
+    /** 
+     * Optional payment fields 
+     */
+    paymentId: { type: String, default: "" },
+    invoice_receipt: { type: String, default: "" },
+
     subTotalAmt: { type: Number, default: 0 },
     totalAmt: { type: Number, default: 0 },
 
-    invoice_receipt: { type: String, default: "" },
-
-    // 🚚 DELIVERY PERSON
+    /**
+     * Delivery Person Information
+     */
     delivery_person: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
 
-    delivery_person_name: {
-      type: String,
-      default: "",
-    },
+    // You already store this in MongoDB, so keep it:
+    delivery_person_name: { type: String, default: "" },
 
-    // Assigned timestamp (new)
-    assignedAt: {
-      type: Date,
-      default: null,
-    },
-
-    // 📊 ORDER STATUS WORKFLOW
-    orderStatus: {
-      type: String,
-      enum: [
-        "Pending",
-        "Processing",
-        "ReadyForDispatch",
-        "OutForDelivery",
-        "Delivered",
-        "FailedDelivery",
-        "Returned",
-        "Cancelled",
-      ],
-      default: "Pending",
-    },
-
-    expectedDeliveryDate: { type: Date },
-    deliveredAt: { type: Date },
+    assignedAt: { type: Date, default: null },
+    expectedDeliveryDate: { type: Date, default: null },
+    deliveredAt: { type: Date, default: null },
   },
-  {
-    timestamps: true, // createdAt = order date, updatedAt = last update
-  }
+  { timestamps: true }
 );
 
 const OrderModel = mongoose.model("order", orderSchema);

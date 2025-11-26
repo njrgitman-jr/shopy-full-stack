@@ -1,4 +1,5 @@
 // client/src/common/SummaryApi.js     This builds the full URL for every API endpoint
+//connect api's with endpoints
 export const baseURL = import.meta.env.VITE_API_URL || "";
 
 const SummaryApi = {
@@ -167,23 +168,25 @@ const SummaryApi = {
     method: "get",
   },
 
-  // =======================
-// ADMIN ORDERS
-// =======================
-adminOrdersList: {
-  url: `${baseURL}/api/admin-orders/list`,
-  method: "get",
-},
 
-adminUpdateOrderStatus: {
-  url: `${baseURL}/api/admin-orders/update-status`,
-  method: "put",
-},
+  // ADMIN: Orders management (unique endpoints)
+  adminOrderList: {
+    url: `${baseURL}/api/admin-orders/list`,
+    method: "get",
+  },
+  adminUpdateOrderStatus: {
+    url: `${baseURL}/api/admin-orders/update-status`,
+    method: "put",
+  },
+  adminAssignDelivery: {
+    url: `${baseURL}/api/admin-orders/assign-delivery`,
+    method: "put",
+  },
+  adminGetDeliveryPersons: {
+    url: `${baseURL}/api/admin-orders/delivery-persons`,
+    method: "get",
+  },
 
-adminAssignDelivery: {
-  url: `${baseURL}/api/admin-orders/assign-delivery`,
-  method: "put",
-},
 
   
 };

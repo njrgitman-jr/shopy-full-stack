@@ -26,8 +26,7 @@ import CheckoutPage from "../pages/CheckoutPage";
 import Success from "../pages/Success";
 import Cancel from "../pages/Cancel";
 import DeliverOrders from "../pages/DeliverOrders";
-
-import AdminOrdersPage from "../pages/AdminOrdersPage";
+import AdminOrderPage from "../pages/adminOrderPage";
 
 const router = createBrowserRouter([
   {
@@ -78,19 +77,27 @@ const router = createBrowserRouter([
             path: "address",
             element: <Address />,
           },
-
+          {
+            path: "dashboardAdmin",
+            element: (
+              <AdminPermision>
+                <DashBoardAdmin />
+              </AdminPermision>
+            ),
+          },
           {
             path: "myorders",
             element: <MyOrders />,
           },
-          {
-            path: "adminOrders",
-            element: (
-              <AdminPermision>
-                <AdminOrdersPage />
-              </AdminPermision>
-            ),
-          },
+         {
+  path: "admin-orders-management", // new unique path
+  element: (
+    <AdminPermision>
+      <AdminOrderPage />
+    </AdminPermision>
+  ),
+},
+
 
           {
             path: "deliverOrders",

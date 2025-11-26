@@ -127,7 +127,7 @@ const UserMenu = ({ close }) => {
         {isAdmin(user.role) && (
           <Link
             onClick={handleClose}
-            to={"/dashboard/adminOrders"}
+            to={"/dashboard/admin-orders-management"}
             className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
           >
             <HiOutlineShoppingCart className="text-gray-500" />{" "}
