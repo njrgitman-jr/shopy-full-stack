@@ -1,15 +1,9 @@
 // server/controllers/admin-order.controller.js
 import OrderModel from "../models/order.model.js";
-
 import User from "../models/user.model.js";
 
 /**
- * List orders with pagination, search and status filter
- * Query params:
- *  - page (default 1)
- *  - limit (default 10)
- *  - search (orderId or user's email)
- *  - status (orderStatus)
+ * List orders with pagination, search, and status filter
  */
 export const adminOrderListController = async (req, res) => {
   try {
@@ -18,27 +12,15 @@ export const adminOrderListController = async (req, res) => {
     const search = (req.query.search || "").trim();
     const status = req.query.status || "";
 
-    // --- Base match filter ---
     const match = {};
 
     if (status) match.orderStatus = status;
+    if (search) match.$or = [{ orderId: { $regex: search, $options: "i" } }];
 
-    if (search) {
-      match.$or = [
-        { orderId: { $regex: search, $options: "i" } },
-      ];
-    }
-
-    // -------------------------
-    // COUNT PIPELINE (NO LOOKUP)
-    // -------------------------
     const total = await OrderModel.countDocuments(match);
     const pages = Math.ceil(total / limit);
     const skip = (page - 1) * limit;
 
-    // -------------------------
-    // DATA PIPELINE (WITH LOOKUP)
-    // -------------------------
     const pipeline = [
       { $match: match },
       {
@@ -49,7 +31,7 @@ export const adminOrderListController = async (req, res) => {
           as: "user",
         },
       },
-      { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } }
+      { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
     ];
 
     if (search) {
@@ -88,38 +70,45 @@ export const adminOrderListController = async (req, res) => {
       data: populated,
       pagination: { total, page, pages, limit },
     });
-
   } catch (error) {
     console.error("adminOrderListController error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-
 /**
- * Update order status (admin)
- * Body: { orderId: "<orderId>", status: "Processing" }
+ * Update order status
  */
 export const adminUpdateOrderStatusController = async (req, res) => {
   try {
     const { orderId, status } = req.body;
+
     if (!orderId || !status) {
-      return res.status(400).json({ success: false, message: "orderId and status are required" });
+      return res.status(400).json({
+        success: false,
+        message: "orderId and status are required",
+      });
     }
 
     const order = await OrderModel.findOne({ orderId });
-    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
 
     order.orderStatus = status;
 
-    // automatic timestamp handling for Delivered
     if (status === "Delivered") {
       order.deliveredAt = new Date();
     }
 
+    // Save without touching productId/product_details
     await order.save();
 
-    return res.json({ success: true, message: "Order status updated", data: order });
+    return res.json({
+      success: true,
+      message: "Order status updated",
+      data: order,
+    });
   } catch (error) {
     console.error("adminUpdateOrderStatusController error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -127,45 +116,76 @@ export const adminUpdateOrderStatusController = async (req, res) => {
 };
 
 /**
- * Assign delivery person
- * Body: { orderId: "<orderId>", deliveryPersonId: "<userId>" }
+ * Assign delivery person to order
  */
 export const adminAssignDeliveryController = async (req, res) => {
   try {
     const { orderId, deliveryPersonId } = req.body;
+
     if (!orderId || !deliveryPersonId) {
-      return res.status(400).json({ success: false, message: "orderId and deliveryPersonId required" });
+      return res.status(400).json({
+        success: false,
+        message: "orderId and deliveryPersonId required",
+      });
     }
 
-   const [order, deliveryUser] = await Promise.all([
-  OrderModel.findOne({ orderId }),
-  User.findById(deliveryPersonId),
-]);
-    if (!order) return res.status(404).json({ success: false, message: "Order not found" });
-    if (!deliveryUser) return res.status(404).json({ success: false, message: "Delivery user not found" });
-    if (deliveryUser.role !== "DELV") {
-      return res.status(400).json({ success: false, message: "Selected user is not a delivery person" });
+    // Find existing order and delivery user
+    const [order, deliveryUser] = await Promise.all([
+      OrderModel.findOne({ orderId }),
+      User.findById(deliveryPersonId),
+    ]);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: `Order with ID "${orderId}" not found`,
+      });
     }
 
+    if (!deliveryUser) {
+      return res.status(404).json({
+        success: false,
+        message: `Delivery user with ID "${deliveryPersonId}" not found`,
+      });
+    }
+
+    // Ensure user is a delivery person
+    if ((deliveryUser.role || "").toUpperCase() !== "DELV") {
+      return res.status(400).json({
+        success: false,
+        message: "Selected user is not a delivery person",
+      });
+    }
+
+    // Only update delivery-related fields
     order.delivery_person = deliveryUser._id;
     order.delivery_person_name = deliveryUser.name || "";
     order.assignedAt = new Date();
 
-    await order.save();
+    await order.save(); // Safe save
 
-    return res.json({ success: true, message: "Delivery person assigned", data: order });
+    return res.json({
+      success: true,
+      message: "Delivery person assigned successfully",
+      data: order,
+    });
   } catch (error) {
     console.error("adminAssignDeliveryController error:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Server error: " + error.message,
+    });
   }
 };
 
 /**
- * Get list of delivery persons (role = DELV)
+ * Get all delivery persons
  */
 export const adminGetDeliveryPersonsController = async (req, res) => {
   try {
-    const deliveryPersons = await User.find({ role: "DELV" }).select("name email mobile");
+    const deliveryPersons = await User.find({ role: "DELV" }).select(
+      "name email mobile"
+    );
     return res.json({ success: true, data: deliveryPersons });
   } catch (error) {
     console.error("adminGetDeliveryPersonsController error:", error);

@@ -1,6 +1,9 @@
-// client/src/pages/adminOrderPage.jsx
+// FULL UPDATED AdminOrderPage.jsx with View Items Modal (Option 2)
+// Shows multiple images, mobile-friendly, desktop-friendly, scrollable
+
 import React, { useEffect, useState } from "react";
 import SummaryApi from "../common/SummaryApi";
+import toast from "react-hot-toast";
 
 const defaultLimit = 10;
 
@@ -16,6 +19,14 @@ const statusOptions = [
   "Cancelled",
 ];
 
+function Loader() {
+  return (
+    <div className="flex justify-center items-center py-10">
+      <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+    </div>
+  );
+}
+
 export default function AdminOrderPage() {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
@@ -27,18 +38,19 @@ export default function AdminOrderPage() {
   const [deliveryPersons, setDeliveryPersons] = useState([]);
   const [selectedOrderForAssign, setSelectedOrderForAssign] = useState(null);
   const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState("");
+  const [openMenu, setOpenMenu] = useState(null);
+  const [totalOrders, setTotalOrders] = useState(0);
 
-  // small fetch wrapper to include credentials
+  // NEW STATE: View Items Popup
+  const [viewItemsOrder, setViewItemsOrder] = useState(null);
+
   const callApi = async ({ url, method = "get", body }) => {
     const opts = {
       method: method.toUpperCase(),
-      headers: {},
       credentials: "include",
+      headers: body ? { "Content-Type": "application/json" } : {},
+      body: body ? JSON.stringify(body) : undefined,
     };
-    if (body) {
-      opts.headers["Content-Type"] = "application/json";
-      opts.body = JSON.stringify(body);
-    }
     const res = await fetch(url, opts);
     return res.json();
   };
@@ -52,58 +64,39 @@ export default function AdminOrderPage() {
         search,
         status: statusFilter,
       });
-      const url = `${SummaryApi.adminOrderList.url}?${qp.toString()}`;
-      const data = await callApi({ url, method: "get" });
+
+      const data = await callApi({ url: `${SummaryApi.adminOrderList.url}?${qp.toString()}` });
+
       if (data.success) {
         setOrders(data.data || []);
         setPagesTotal(data.pagination?.pages || 1);
         setPage(data.pagination?.page || p);
-      } else {
-        console.error("Failed to fetch orders", data);
+        setTotalOrders(data.pagination?.total || 0);
       }
-    } catch (err) {
-      console.error("loadOrders err", err);
     } finally {
       setLoading(false);
     }
   };
 
   const loadDeliveryPersons = async () => {
-    try {
-      const data = await callApi({ url: SummaryApi.adminGetDeliveryPersons.url, method: "get" });
-      if (data.success) setDeliveryPersons(data.data || []);
-    } catch (err) {
-      console.error("loadDeliveryPersons", err);
-    }
+    const data = await callApi({ url: SummaryApi.adminGetDeliveryPersons.url });
+    if (data.success) setDeliveryPersons(data.data || []);
   };
 
   useEffect(() => {
     loadOrders(1);
     loadDeliveryPersons();
-    // eslint-disable-next-line
   }, [limit]);
 
-  // search trigger
-  const doSearch = async () => {
-    setPage(1);
-    await loadOrders(1);
-  };
+  const doSearch = () => loadOrders(1);
 
   const changeStatus = async (orderId, status) => {
-    try {
-      const data = await callApi({
-        url: SummaryApi.adminUpdateOrderStatus.url,
-        method: "put",
-        body: { orderId, status },
-      });
-      if (data.success) {
-        await loadOrders(page);
-      } else {
-        alert(data.message || "Failed to update status");
-      }
-    } catch (err) {
-      console.error("changeStatus err", err);
-    }
+    const data = await callApi({
+      url: SummaryApi.adminUpdateOrderStatus.url,
+      method: "put",
+      body: { orderId, status },
+    });
+    if (data.success) loadOrders(page);
   };
 
   const openAssign = (order) => {
@@ -112,135 +105,97 @@ export default function AdminOrderPage() {
   };
 
   const doAssignDelivery = async () => {
-    if (!selectedOrderForAssign || !selectedDeliveryPerson) {
-      alert("Select delivery person");
-      return;
-    }
-    try {
-      const data = await callApi({
-        url: SummaryApi.adminAssignDelivery.url,
-        method: "put",
-        body: { orderId: selectedOrderForAssign.orderId, deliveryPersonId: selectedDeliveryPerson },
-      });
-      if (data.success) {
-        setSelectedOrderForAssign(null);
-        await loadOrders(page);
-      } else {
-        alert(data.message || "Failed to assign");
-      }
-    } catch (err) {
-      console.error("doAssignDelivery", err);
+    if (!selectedDeliveryPerson) return toast.error("Select delivery person");
+    if (!selectedOrderForAssign || !selectedOrderForAssign.orderId)
+      return toast.error("Order ID missing. Refresh page.");
+
+    const data = await callApi({
+      url: SummaryApi.adminAssignDelivery.url,
+      method: "put",
+      body: {
+        orderId: selectedOrderForAssign.orderId,
+        deliveryPersonId: selectedDeliveryPerson,
+      },
+    });
+
+    if (data.success) {
+      toast.success("Delivery assigned!");
+      setSelectedOrderForAssign(null);
+      loadOrders(page);
+    } else {
+      toast.error(data.message || "Failed to assign delivery");
     }
   };
-
-  // mobile card rendering
-  const OrderCard = ({ o }) => (
-    <div className="bg-white rounded-lg shadow p-4 mb-4">
-      <div className="flex justify-between items-start">
-        <div>
-          <div className="text-sm text-gray-500">Order ID</div>
-          <div className="font-medium">{o.orderId}</div>
-          <div className="text-sm text-gray-500 mt-2">User</div>
-          <div className="text-sm">{o.user?.email || "-"}</div>
-          <div className="text-sm text-gray-500 mt-2">Product</div>
-          <div className="text-sm">{o.product_details?.name || "-"}</div>
-          <div className="text-sm text-gray-500 mt-2">Amount</div>
-          <div className="font-semibold">${o.totalAmt?.toFixed?.(2) ?? o.totalAmt}</div>
-        </div>
-
-        <div className="text-right">
-          <div className="text-sm text-gray-500">Status</div>
-          <div className="mb-2">
-            <select
-              value={o.orderStatus}
-              onChange={(e) => changeStatus(o.orderId, e.target.value)}
-              className="border rounded px-2 py-1 text-sm"
-            >
-              {statusOptions.map((s) => (
-                <option key={s} value={s}>
-                  {s || "—"}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <button
-              onClick={() => openAssign(o)}
-              className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
-            >
-              Assign
-            </button>
-          </div>
-        </div>
-      </div>
-      <div className="mt-3 text-xs text-gray-400">Created: {new Date(o.createdAt).toLocaleString()}</div>
-      <div className="mt-1 text-xs text-gray-400">Assigned to: {o.delivery_person_name || "—"}</div>
-    </div>
-  );
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Admin — Orders</h1>
 
-      <div className="bg-white p-4 rounded shadow mb-4 flex flex-col md:flex-row md:items-center md:space-x-4">
-        <div className="flex-1 mb-2 md:mb-0">
-          <input
-            type="text"
-            placeholder="Search by order ID or user email"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            onKeyDown={(e)=> { if(e.key === 'Enter') doSearch(); }}
-          />
-        </div>
+      {/* Filters */}
+      <div className="bg-white p-4 rounded shadow mb-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+        <input
+          className="border rounded px-3 py-2"
+          placeholder="Search order ID or email"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && doSearch()}
+        />
 
-        <div className="space-x-2 flex items-center">
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-            className="border rounded px-2 py-2"
-          >
-            <option value="">All statuses</option>
-            {statusOptions.map((s) => s && <option key={s} value={s}>{s}</option>)}
-          </select>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border rounded px-2 py-2"
+        >
+          <option value="">All statuses</option>
+          {statusOptions.map((s) => s && <option key={s}>{s}</option>)}
+        </select>
 
-          <select value={limit} onChange={(e)=> { setLimit(parseInt(e.target.value)); }} className="border rounded px-2 py-2">
-            <option value={5}>5 / page</option>
-            <option value={10}>10 / page</option>
-            <option value={20}>20 / page</option>
-          </select>
+        <select
+          value={limit}
+          onChange={(e) => setLimit(Number(e.target.value))}
+          className="border rounded px-2 py-2"
+        >
+          <option value={5}>5</option>
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+        </select>
 
-          <button onClick={doSearch} className="bg-gray-800 text-white px-3 py-2 rounded">Search</button>
-        </div>
+        <button
+          onClick={doSearch}
+          className="bg-gray-800 text-white px-4 py-2 rounded"
+        >
+          Search
+        </button>
       </div>
 
-      {/* Orders list */}
+      {/* CONTENT */}
       {loading ? (
-        <div className="text-center py-8">Loading...</div>
+        <Loader />
       ) : (
         <>
-          {/* Desktop table */}
+          {/* DESKTOP TABLE */}
           <div className="hidden md:block bg-white rounded shadow overflow-x-auto">
-            <table className="w-full min-w-[900px]">
-              <thead className="bg-gray-100 text-left">
+            <table className="w-full min-w-[950px]">
+              <thead className="bg-gray-100">
                 <tr>
                   <th className="p-3">Order ID</th>
-                  <th className="p-3">User</th>
-                  <th className="p-3">Product</th>
+                  <th className="p-3">Order Date</th>
+                  <th className="p-3">Assigned At</th>
                   <th className="p-3">Amount</th>
                   <th className="p-3">Status</th>
                   <th className="p-3">Delivery Person</th>
-                  <th className="p-3">Actions</th>
+                  <th></th>
                 </tr>
               </thead>
+
               <tbody>
                 {orders.map((o) => (
                   <tr key={o._id} className="border-b">
                     <td className="p-3">{o.orderId}</td>
-                    <td className="p-3">{o.user?.email || "-"}</td>
-                    <td className="p-3">{o.product_details?.name || "-"}</td>
-                    <td className="p-3">${o.totalAmt?.toFixed?.(2) ?? o.totalAmt}</td>
+                    <td className="p-3">{new Date(o.createdAt).toLocaleString()}</td>
+                    <td className="p-3">{o.assignedAt ? new Date(o.assignedAt).toLocaleString() : "-"}</td>
+                    <td className="p-3">${o.totalAmt}</td>
+
                     <td className="p-3">
                       <select
                         value={o.orderStatus}
@@ -248,71 +203,204 @@ export default function AdminOrderPage() {
                         className="border rounded px-2 py-1 text-sm"
                       >
                         {statusOptions.map((s) => (
-                          <option key={s} value={s}>
-                            {s || "—"}
-                          </option>
+                          <option key={s}>{s || "—"}</option>
                         ))}
                       </select>
                     </td>
+
                     <td className="p-3">{o.delivery_person_name || "-"}</td>
-                    <td className="p-3">
-                      <div className="flex gap-2">
-                        <button onClick={() => openAssign(o)} className="px-2 py-1 bg-blue-600 text-white rounded">Assign</button>
-                        <button onClick={() => window.open(`/admin/order/${o.orderId}`, "_blank")} className="px-2 py-1 border rounded">View</button>
-                      </div>
+
+                    <td className="p-3 relative">
+                      <button
+                        onClick={() => setOpenMenu(openMenu === o._id ? null : o._id)}
+                        className="p-2 rounded hover:bg-gray-200"
+                      >
+                        ⋮
+                      </button>
+
+                      {openMenu === o._id && (
+                        <div className="absolute right-0 mt-2 w-32 bg-white shadow rounded z-20">
+                          <button
+                            onClick={() => {
+                              setOpenMenu(null);
+                              openAssign(o);
+                            }}
+                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                          >
+                            Assign
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setOpenMenu(null);
+                              setViewItemsOrder(o);
+                            }}
+                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                          >
+                            View Items
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
-                {orders.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="p-6 text-center text-gray-500">No orders found</td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
 
-          {/* Mobile list */}
-          <div className="md:hidden">
-            {orders.map((o) => <OrderCard key={o._id} o={o} />)}
+          {/* MOBILE CARD */}
+          <div className="md:hidden flex flex-col gap-4">
+            {orders.map((o) => (
+              <div key={o._id} className="bg-white rounded shadow p-4 text-sm space-y-2 relative">
+                <div className="flex justify-between items-start relative">
+                  <span className="font-semibold">{o.orderId}</span>
+
+                  <div className="relative">
+                    <button
+                      onClick={() => setOpenMenu(openMenu === o._id ? null : o._id)}
+                      className="p-1 text-xl"
+                    >
+                      ⋮
+                    </button>
+
+                    {openMenu === o._id && (
+                      <div className="absolute right-0 top-7 w-32 bg-white border rounded shadow z-30">
+                        <button
+                          onClick={() => {
+                            setOpenMenu(null);
+                            openAssign(o);
+                          }}
+                          className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+                        >
+                          Assign
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setOpenMenu(null);
+                            setViewItemsOrder(o);
+                          }}
+                          className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+                        >
+                          View Items
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <p><b>Order Date:</b> {new Date(o.createdAt).toLocaleString()}</p>
+                <p><b>Assigned At:</b> {o.assignedAt ? new Date(o.assignedAt).toLocaleString() : "-"}</p>
+                <p><b>Amount:</b> ${o.totalAmt}</p>
+
+                <div>
+                  <b>Status:</b>
+                  <select
+                    value={o.orderStatus}
+                    onChange={(e) => changeStatus(o.orderId, e.target.value)}
+                    className="w-full border rounded px-2 py-1 mt-1"
+                  >
+                    {statusOptions.map((s) => (
+                      <option key={s}>{s || "—"}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <p><b>Delivery Person:</b> {o.delivery_person_name || "-"}</p>
+              </div>
+            ))}
           </div>
         </>
       )}
 
+      {/* TOTAL */}
+      <div className="text-sm text-gray-600 mt-2">
+        Showing {(page - 1) * limit + 1}–{(page - 1) * limit + orders.length} of {totalOrders} orders
+      </div>
+
       {/* Pagination */}
-      <div className="mt-4 flex items-center justify-between">
-        <div>
-          Page {page} of {pagesTotal} — Total per page {limit}
-        </div>
-        <div className="flex gap-2 items-center">
-          <button disabled={page <= 1} onClick={() => { setPage(1); loadOrders(1); }} className="px-3 py-1 border rounded disabled:opacity-50">First</button>
-          <button disabled={page <= 1} onClick={() => { const np = Math.max(1, page-1); setPage(np); loadOrders(np); }} className="px-3 py-1 border rounded disabled:opacity-50">Prev</button>
-          <button disabled={page >= pagesTotal} onClick={() => { const np = Math.min(pagesTotal, page+1); setPage(np); loadOrders(np); }} className="px-3 py-1 border rounded disabled:opacity-50">Next</button>
-          <button disabled={page >= pagesTotal} onClick={() => { setPage(pagesTotal); loadOrders(pagesTotal); }} className="px-3 py-1 border rounded disabled:opacity-50">Last</button>
+      <div className="mt-4 flex justify-between text-sm">
+        <div>Page {page} / {pagesTotal}</div>
+        <div className="flex gap-2">
+          <button disabled={page <= 1} onClick={() => loadOrders(1)} className="px-3 py-1 border rounded">First</button>
+          <button disabled={page <= 1} onClick={() => loadOrders(page - 1)} className="px-3 py-1 border rounded">Prev</button>
+          <button disabled={page >= pagesTotal} onClick={() => loadOrders(page + 1)} className="px-3 py-1 border rounded">Next</button>
+          <button disabled={page >= pagesTotal} onClick={() => loadOrders(pagesTotal)} className="px-3 py-1 border rounded">Last</button>
         </div>
       </div>
 
-      {/* Assign modal simple panel */}
+      {/* Assign Modal */}
       {selectedOrderForAssign && (
-        <div className="fixed inset-0 flex items-end md:items-center justify-center z-50">
-          <div className="absolute inset-0 bg-black opacity-40" onClick={()=>setSelectedOrderForAssign(null)} />
-          <div className="relative bg-white rounded-t-lg md:rounded-lg p-4 w-full md:w-1/2 max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-semibold">Assign Delivery — {selectedOrderForAssign.orderId}</h3>
-              <button onClick={()=>setSelectedOrderForAssign(null)} className="text-gray-500">Close</button>
-            </div>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black opacity-40" onClick={() => setSelectedOrderForAssign(null)} />
 
-            <div className="mb-3">
-              <label className="block text-sm text-gray-600 mb-1">Select Delivery Person</label>
-              <select value={selectedDeliveryPerson} onChange={(e)=>setSelectedDeliveryPerson(e.target.value)} className="w-full border rounded px-3 py-2">
-                <option value="">-- Select --</option>
-                {deliveryPersons.map(dp => (<option key={dp._id} value={dp._id}>{dp.name} — {dp.email}</option>))}
-              </select>
-            </div>
+          <div className="relative bg-white rounded p-4 w-full md:w-1/2 max-h-[90vh] overflow-auto">
+            <h3 className="text-lg font-semibold mb-3">Assign Delivery — {selectedOrderForAssign.orderId}</h3>
+
+            <select
+              value={selectedDeliveryPerson}
+              onChange={(e) => setSelectedDeliveryPerson(e.target.value)}
+              className="w-full border rounded px-3 py-2 mb-3"
+            >
+              <option value="">-- Select Person --</option>
+              {deliveryPersons.map((d) => (
+                <option key={d._id} value={d._id}>{d.name} — {d.email}</option>
+              ))}
+            </select>
 
             <div className="flex justify-end gap-2">
-              <button onClick={()=>setSelectedOrderForAssign(null)} className="px-3 py-2 border rounded">Cancel</button>
+              <button onClick={() => setSelectedOrderForAssign(null)} className="px-3 py-2 border rounded">Cancel</button>
               <button onClick={doAssignDelivery} className="px-3 py-2 bg-blue-600 text-white rounded">Assign</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VIEW ITEMS MODAL */}
+      {viewItemsOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black opacity-40"
+            onClick={() => setViewItemsOrder(null)}
+          />
+
+          <div className="relative bg-white w-full md:w-2/3 rounded p-4 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-semibold mb-3">Order Items — {viewItemsOrder.orderId}</h2>
+
+            <div className="space-y-4">
+              {viewItemsOrder.items?.map((item, index) => (
+                <div key={index} className="border rounded p-3 flex gap-3">
+                  {/* IMAGES */}
+                  <div className="flex gap-2 overflow-x-auto max-w-[120px]">
+                    {Array.isArray(item.product_details?.image) &&
+                      item.product_details.image.map((img, i) => (
+                        <img
+                          key={i}
+                          src={img}
+                          alt=""
+                          className="w-20 h-20 object-cover rounded"
+                        />
+                      ))}
+                  </div>
+
+                  <div className="flex-1">
+                    <p className="font-semibold">{item.product_details?.name}</p>
+                    <p>Qty: {item.quantity}</p>
+                    <p className="font-semibold text-gray-700">
+                      Price: ${item.product_details?.price || 0}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-right mt-4">
+              <button
+                onClick={() => setViewItemsOrder(null)}
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

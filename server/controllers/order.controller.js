@@ -1,49 +1,130 @@
 import Stripe from "../config/stripe.js";
 import CartProductModel from "../models/cartproduct.model.js";
+import CartHistoryModel from "../models/carthistory.model.js"; 
 import OrderModel from "../models/order.model.js";
 import UserModel from "../models/user.model.js";
 import mongoose from "mongoose";
 
+/**
+ * Create a single Order for all cart items (Cash On Delivery)
+ * Steps:
+ * 1. Read the authenticated userId and (optional) totals/address from request body.
+ * 2. Load all cart items for the user (populate product information).
+ * 3. Validate - if no items -> return error.
+ * 4. Start a mongoose transaction (if available) for atomicity.
+ * 5. Create a single Order document containing an items[] array (one entry per cart item).
+ * 6. Insert all cart items into CartHistory with orderId = created order._id.
+ * 7. Remove cart items and clear user's shopping_cart.
+ * 8. Commit transaction and return the created order.
+ */
 export async function CashOnDeliveryOrderController(request, response) {
+  const session = await mongoose.startSession();
   try {
-    const userId = request.userId; // auth middleware
-    const { list_items, totalAmt, addressId, subTotalAmt } = request.body;
+    const userId = request.userId; // set by auth middleware
+    const { totalAmt: bodyTotalAmt, addressId, subTotalAmt: bodySubTotal } = request.body;
 
-    const payload = list_items.map((el) => {
+    // 1) FETCH ALL CART ITEMS FOR THE USER (and populate product data)
+    const cartItems = await CartProductModel.find({ userId }).populate("productId");
+    if (!cartItems || cartItems.length === 0) {
+      return response.status(400).json({
+        message: "Cart is empty. Nothing to order.",
+        error: true,
+        success: false,
+      });
+    }
+
+    // 2) CALCULATE SUBTOTAL / TOTAL (use body values if provided else compute from cart)
+    let computedSubTotal = 0;
+    const items = cartItems.map((cart) => {
+      const product = cart.productId || {}; // populated product document
+      // price fallback: product.price || 0
+      // NOTE: if you have discounts / price-with-discount functions, replace below calculation accordingly
+      const unitPrice = Number(product.price ?? 0);
+      const quantity = Number(cart.quantity ?? 1);
+      const lineSubtotal = unitPrice * quantity;
+      computedSubTotal += lineSubtotal;
+
       return {
-        userId: userId,
-        orderId: `ORD-${new mongoose.Types.ObjectId()}`,
-        productId: el.productId._id,
+        productId: product._id,
+        quantity,
         product_details: {
-          name: el.productId.name,
-          image: el.productId.image,
+          name: product.name ?? "",
+          image: product.image ?? [],
+          price: unitPrice,
+          discount: product.discount ?? 0,
         },
-        paymentId: "",
-        payment_status: "COD Pending",    //CASH ON DELIVERY",
-        delivery_address: addressId,
-        subTotalAmt: subTotalAmt,
-        totalAmt: totalAmt,
       };
     });
 
-    const generatedOrder = await OrderModel.insertMany(payload);
+    const subTotalAmt = typeof bodySubTotal !== "undefined" ? Number(bodySubTotal) : computedSubTotal;
+    const totalAmt = typeof bodyTotalAmt !== "undefined" ? Number(bodyTotalAmt) : subTotalAmt; // adjust if taxes/shipping applied
 
-    ///remove from the cart
-    const removeCartItems = await CartProductModel.deleteMany({
-      userId: userId,
-    });
-    const updateInUser = await UserModel.updateOne(
-      { _id: userId },
-      { shopping_cart: [] }
-    );
+    // 3) Create a unique human-readable orderId string
+    const humanOrderId = `ORD-${new mongoose.Types.ObjectId()}`;
 
-    return response.json({
-      message: "Order successfully",
-      error: false,
-      success: true,
-      data: generatedOrder,
-    });
+    // 4) START TRANSACTION to ensure atomic moves (if DB supports transactions)
+    session.startTransaction();
+    try {
+      // 5) Create a single Order document with items array
+      const orderDoc = {
+        orderId: humanOrderId,
+        userId,
+        items, // <-- array of items (productId + quantity + product_details)
+        paymentId: "",
+        payment_status: "COD Pending",
+        delivery_address: addressId,
+        subTotalAmt,
+        totalAmt,
+      };
+
+      const createdOrder = await OrderModel.create([orderDoc], { session });
+      // createdOrder is an array (create with array returns array), grab first doc
+      const order = createdOrder[0];
+
+      // 6) Prepare CartHistory entries: give each cart item the created order._id
+      const historyPayload = cartItems.map((cart) => ({
+        orderId: order._id, // reference to the single order doc
+        productId: cart.productId._id,
+        quantity: cart.quantity,
+        userId,
+      }));
+
+      if (historyPayload.length > 0) {
+        await CartHistoryModel.insertMany(historyPayload, { session });
+      }
+
+      // 7) Remove all cart products for the user
+      await CartProductModel.deleteMany({ userId }, { session });
+
+      // 8) Clear user's shopping_cart array in UserModel
+      await UserModel.updateOne({ _id: userId }, { shopping_cart: [] }, { session });
+
+      // 9) Commit transaction
+      await session.commitTransaction();
+      session.endSession();
+
+      // Return the created order (populated minimal info)
+      const orderToReturn = await OrderModel.findById(order._id).populate("delivery_address");
+
+      return response.json({
+        message: "Order created successfully",
+        error: false,
+        success: true,
+        data: orderToReturn,
+      });
+    } catch (txError) {
+      // Abort transaction on any error inside transaction block
+      await session.abortTransaction();
+      session.endSession();
+      throw txError;
+    }
   } catch (error) {
+    // Ensure session is ended if outer try fails before committing
+    try {
+      await session.endSession();
+    } catch (e) {
+      /* ignore */
+    }
     return response.status(500).json({
       message: error.message || error,
       error: true,
@@ -51,6 +132,7 @@ export async function CashOnDeliveryOrderController(request, response) {
     });
   }
 }
+
 
 export const pricewithDiscount = (price, dis = 1) => {
   const discountAmout = Math.ceil((Number(price) * Number(dis)) / 100);
@@ -215,3 +297,4 @@ export async function getOrderDetailsController(request, response) {
     });
   }
 }
+

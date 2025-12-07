@@ -89,15 +89,14 @@ const router = createBrowserRouter([
             path: "myorders",
             element: <MyOrders />,
           },
-         {
-  path: "admin-orders-management", // new unique path
-  element: (
-    <AdminPermision>
-      <AdminOrderPage />
-    </AdminPermision>
-  ),
-},
-
+          {
+            path: "admin-orders-management", // new unique path
+            element: (
+              <AdminPermision>
+                <AdminOrderPage />
+              </AdminPermision>
+            ),
+          },
 
           {
             path: "deliverOrders",
