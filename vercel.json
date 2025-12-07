@@ -9,20 +9,14 @@
       "use": "@vercel/static-build"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "server/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "client/dist/$1"
-    }
-  ],
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/server/index.js"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/client/dist/index.html"
     }
   ]
 }

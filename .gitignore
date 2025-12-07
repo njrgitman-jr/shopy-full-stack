@@ -29,3 +29,5 @@ server/node_modules
 .env
 .client/.env
 .server/.env
+.vercel
+.env*.local
