@@ -65,6 +65,24 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       default: null,
     },
+    deliveryStatus: {
+      type: String,
+      enum: [
+        "Pending", // when assigned but driver hasn't acted yet
+        "Accepted",
+        "Rejected",
+        "OnTheWayToPickup",
+        "ArrivedAtPickup",
+        "PickedUp",
+        "OnTheWayToCustomer",
+        "ArrivedAtCustomer",
+        "DeliveredSuccessfully",
+        "FailedDelivery",
+        "ReturnToSeller",
+      ],
+      default: "Pending",
+    },
+
 
     delivery_person_name: { type: String, default: "" },
 

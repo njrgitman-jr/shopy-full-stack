@@ -99,13 +99,14 @@ const router = createBrowserRouter([
           },
 
           {
-            path: "deliverOrders",
-            element: (
-              <AdminPermision>
-                <DeliverOrders />
-              </AdminPermision>
-            ),
-          },
+  path: "deliverOrders",
+  element: (
+    <AdminPermision>
+      <DeliverOrders />
+    </AdminPermision>
+  ),
+},
+
 
           {
             path: "category",

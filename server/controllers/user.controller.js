@@ -564,18 +564,3 @@ export async function getLoginHistory(request, response) {
     });
   }
 }
-
-
-/**
- * GET /api/user/delivery-persons
- * Returns users with role = DELV; protected by auth + admin
- */
-// export const getDeliveryPersons = async (req, res) => {
-//   try {
-//     const users = await UserModel.find({ role: "DELV", status: "Active" }).select("name email mobile");
-//     return res.json({ success: true, data: users, message: "Delivery persons fetched" });
-//   } catch (error) {
-//     console.error("getDeliveryPersons error:", error);
-//     return res.status(500).json({ success: false, message: "Failed to fetch delivery persons" });
-//   }
-// };

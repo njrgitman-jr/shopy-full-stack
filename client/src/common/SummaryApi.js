@@ -188,6 +188,20 @@ const SummaryApi = {
   },
 
 
+  //delivery person orders
+deliveryAssignedOrders: {
+  url: `${baseURL}/api/delivery-orders/my-assigned-orders`,
+  method: "GET",
+},
+
+deliveryUpdateStatus: {
+  url: `${baseURL}/api/delivery-orders/update-delivery-status`,
+  method: "PUT",
+},
+
+
+
+
   
 };
 

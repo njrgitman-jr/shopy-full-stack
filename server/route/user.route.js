@@ -1,3 +1,5 @@
+//server/rout/user.route.js
+
 import { Router } from "express";
 import {
   forgotPasswordController,
