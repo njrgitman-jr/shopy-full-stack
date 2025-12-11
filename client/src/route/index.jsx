@@ -95,7 +95,11 @@ const router = createBrowserRouter([
           },
           {
             path: "myorders",
-            element: <MyOrders />,
+            element: (
+              <UserPermision>
+                <MyOrders />
+              </UserPermision>
+            ),
           },
           {
             path: "admin-orders-management", // new unique path

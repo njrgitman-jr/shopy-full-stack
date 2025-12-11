@@ -113,7 +113,8 @@ const UserMenu = ({ close }) => {
             to={"/dashboard/upload-product"}
             className="px-2 hover:bg-orange-200 py-1"
           >
-            Upload Product
+            <HiOutlineShoppingCart className="text-gray-500" />{" "}
+            <span> Upload Product</span>
           </Link>
         )}
         {isAdmin(user.role) && (
@@ -150,14 +151,16 @@ const UserMenu = ({ close }) => {
         )}
 
         {/* Regular User Links */}
-        <Link
-          onClick={handleClose}
-          to={"/dashboard/myorders"}
-          className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
-        >
-          <HiOutlineClipboardList className="text-gray-500" />{" "}
-          <span>My Orders</span>
-        </Link>
+        {isUser(user.role) && (
+          <Link
+            onClick={handleClose}
+            to={"/dashboard/myorders"}
+            className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
+          >
+            <HiOutlineClipboardList className="text-gray-500" />{" "}
+            <span>My Orders</span>
+          </Link>
+        )}
 
         {isUser(user.role) && (
           <Link

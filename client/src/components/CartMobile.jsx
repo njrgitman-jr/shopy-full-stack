@@ -10,19 +10,19 @@ const CartMobileLink = () => {
   const { totalPrice, totalQty } = useGlobalContext();
   const cartItem = useSelector((state) => state.cartItem.cart);
 
-  // ✅ Hide on mobile when user is logged out
   const user = useSelector((state) => state.user);
 
-  if (!user?._id) return null;
+  // ✅ Show only if logged in AND role is 'user'
+  if (!user?._id || user?.role !== "USER") return null;
 
   return (
     <>
       {cartItem[0] && (
         <div className="sticky bottom-4 p-2">
-          <div className="bg-green-400 px-2 py-1 rounded text-neutral-100 text-sm  flex items-center justify-between gap-3 lg:hidden">
+          <div className="bg-green-400 px-2 py-1 rounded text-neutral-100 text-sm flex items-center justify-between gap-3 lg:hidden">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-green-500 rounded w-fit">
-                <FaCartShopping className="animate-bounce"/>
+                <FaCartShopping className="animate-bounce" />
               </div>
               <div className="text-xs">
                 <p>{totalQty} items</p>
@@ -30,10 +30,7 @@ const CartMobileLink = () => {
               </div>
             </div>
 
-            <Link
-              to={"/cart"}
-              className="flex items-center gap-1"
-            >
+            <Link to={"/cart"} className="flex items-center gap-1">
               <span className="text-sm">View Cart.</span>
               <FaCaretRight />
             </Link>

@@ -1,4 +1,3 @@
-
 // ====== SERVER ENTRY POINT ======
 import express from "express";
 import cors from "cors";
@@ -22,8 +21,6 @@ import dashboardRouter from "./route/dashboard.route.js";
 import adminOrderRouter from "./route/admin-order.route.js";
 import deliveryOrderRouter from "./route/delivery-order.route.js";
 
-
-
 const app = express();
 
 // =============================
@@ -35,9 +32,9 @@ const isProduction = process.env.NODE_ENV === "production";
 // 🌐 FLEXIBLE CORS (DEV + PROD)
 // =============================
 const allowedOrigins = [
-  /^https:\/\/.*\.vercel\.app$/,       // Any Vercel frontend
-  /^https:\/\/.*\.onrender\.com$/,     // Any Render frontend
-  /^https:\/\/yourdomain\.com$/,       // Optional real domain
+  /^https:\/\/.*\.vercel\.app$/,
+  /^https:\/\/.*\.onrender\.com$/,
+  /^https:\/\/yourdomain\.com$/,
 ];
 
 app.use(
@@ -45,16 +42,13 @@ app.use(
     origin: (origin, callback) => {
       console.log("🌍 Incoming Origin:", origin);
 
-      // Allow Postman / backend-to-backend / serverless requests
       if (!origin) return callback(null, true);
 
-      // Allow all localhost in dev
       if (!isProduction && /^http:\/\/localhost:\d+$/.test(origin)) {
         console.log("🟢 DEV MODE — Allowed:", origin);
         return callback(null, true);
       }
 
-      // Production: only allow approved domains
       const allowed = allowedOrigins.some((rule) => rule.test(origin));
 
       if (allowed) {
@@ -68,6 +62,24 @@ app.use(
     credentials: true,
   })
 );
+
+// =============================
+// ⭐ REQUIRED FIX #1 — CREDENTIAL HEADERS
+// =============================
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  // mirror back the origin only if allowed
+  if (
+    (!isProduction && /^http:\/\/localhost:\d+$/.test(origin)) ||
+    allowedOrigins.some((rule) => rule.test(origin))
+  ) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // ========= MIDDLEWARES =========
 app.use(express.json());
@@ -102,8 +114,6 @@ app.use("/api/order", orderRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/admin-orders", adminOrderRouter);
 app.use("/api/delivery-orders", deliveryOrderRouter);
-
-
 
 // ========= START SERVER =========
 connectDB().then(() => {
