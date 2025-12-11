@@ -61,76 +61,83 @@ export default function DeliverOrders() {
               ${idx % 2 === 0 ? "border-blue-500 bg-blue-50" : "border-green-500 bg-green-50"}
             `}
           >
-            {/* Header */}
-            <div className="flex justify-between flex-wrap gap-2">
-              <h2 className="font-semibold text-lg break-all">{o.orderId}</h2>
-              <span className="text-xs whitespace-nowrap">
-                {new Date(o.createdAt).toLocaleString()}
-              </span>
+            {/* Order Summary Header */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mb-3">
+              <p>
+                <b>Order ID:</b> {o.orderId}
+              </p>
+              <p>
+                <b>Order Date:</b> {new Date(o.createdAt).toLocaleString()}
+              </p>
+              <p>
+                <b>Assigned At:</b>{" "}
+                {o.assignedAt
+                  ? new Date(o.assignedAt).toLocaleString()
+                  : "—"}
+              </p>
+              <p>
+               <b>Amount:</b> ${Number(o.totalAmt).toFixed(3)}
+
+              </p>
             </div>
 
-            <div className="mt-1 text-sm">
-              <p>
-                <b>Amount:</b> ${o.totalAmt}
-              </p>
-              <p>
-                <b>Status:</b> {o.orderStatus}
-              </p>
+            <p className="text-sm">
+              <b>Status:</b> {o.orderStatus}
+            </p>
 
-              {/* Delivery Status */}
-              <p className="mt-2 font-semibold">Delivery Status:</p>
-              <select
-                onChange={(e) => updateStatus(o.orderId, e.target.value)}
-                value={o.deliveryStatus}
-                className="border rounded w-full p-2 mt-1 bg-white"
-              >
-                {deliveryStatusList.map((s) => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
+            {/* Delivery Status */}
+            <p className="mt-2 font-semibold">Delivery Status:</p>
+            <select
+              onChange={(e) => updateStatus(o.orderId, e.target.value)}
+              value={o.deliveryStatus}
+              className="border rounded w-full p-2 mt-1 bg-white"
+            >
+              {deliveryStatusList.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
 
-              {/* Items List */}
-              <h3 className="mt-3 font-semibold">Items:</h3>
+            {/* Items List */}
+            <h3 className="mt-3 font-semibold">Items:</h3>
 
-              <div className="flex flex-col gap-3 mt-2">
-                {o.items?.map((item, idx2) => (
-                  <div
-                    key={idx2}
-                    className="border rounded p-3 w-full overflow-hidden bg-white"
-                  >
-                    {/* PRODUCT INFO */}
-                    <div className="mb-2">
-                      <p className="font-semibold break-words">
-                        {item.product_details?.name}
-                      </p>
-                      <p>Qty: {item.quantity}</p>
-                      <p className="text-gray-700 font-semibold">
-                        Price: ${item.product_details?.price || 0}
-                      </p>
-                    </div>
+            <div className="flex flex-col gap-3 mt-2">
+              {o.items?.map((item, idx2) => (
+                <div
+                  key={idx2}
+                  className="border rounded p-3 w-full overflow-hidden bg-white"
+                >
+                  {/* PRODUCT INFO */}
+                  <div className="mb-2">
+                    <p className="font-semibold break-words">
+                      {item.product_details?.name}
+                    </p>
+                    <p>Qty: {item.quantity}</p>
+                    <p className="text-gray-700 font-semibold">
+                      Price: ${item.product_details?.price || 0}
+                    </p>
+                  </div>
 
-                    {/* IMAGES */}
-                    <div className="flex gap-2 overflow-x-auto max-w-full">
-                      {Array.isArray(item.product_details?.image) ? (
-                        item.product_details.image.map((img, i) => (
-                          <img
-                            key={i}
-                            src={img}
-                            alt={item.product_details?.name || ""}
-                            className="w-20 h-20 rounded object-cover flex-shrink-0"
-                          />
-                        ))
-                      ) : item.product_details?.image ? (
+                  {/* IMAGES */}
+                  <div className="flex gap-2 overflow-x-auto max-w-full">
+                    {Array.isArray(item.product_details?.image) ? (
+                      item.product_details.image.map((img, i) => (
                         <img
-                          src={item.product_details.image}
+                          key={i}
+                          src={img}
                           alt={item.product_details?.name || ""}
                           className="w-20 h-20 rounded object-cover flex-shrink-0"
                         />
-                      ) : null}
-                    </div>
+                      ))
+                    ) : item.product_details?.image ? (
+                      <img
+                        src={item.product_details.image}
+                        alt={item.product_details?.name || ""}
+                        className="w-20 h-20 rounded object-cover flex-shrink-0"
+                      />
+                    ) : null}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         ))}

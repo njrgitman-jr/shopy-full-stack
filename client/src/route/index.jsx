@@ -27,6 +27,8 @@ import Success from "../pages/Success";
 import Cancel from "../pages/Cancel";
 import DeliverOrders from "../pages/DeliverOrders";
 import AdminOrderPage from "../pages/adminOrderPage";
+import DelvPermision from "../layouts/DelvPermision";
+import UserPermision from "../layouts/UserPermision";
 
 const router = createBrowserRouter([
   {
@@ -73,10 +75,16 @@ const router = createBrowserRouter([
             path: "profile",
             element: <Profile />,
           },
+
           {
             path: "address",
-            element: <Address />,
+            element: (
+              <UserPermision>
+                <Address />
+              </UserPermision>
+            ),
           },
+
           {
             path: "dashboardAdmin",
             element: (
@@ -99,14 +107,13 @@ const router = createBrowserRouter([
           },
 
           {
-  path: "deliverOrders",
-  element: (
-    <AdminPermision>
-      <DeliverOrders />
-    </AdminPermision>
-  ),
-},
-
+            path: "deliverOrders",
+            element: (
+              <DelvPermision>
+                <DeliverOrders />
+              </DelvPermision>
+            ),
+          },
 
           {
             path: "category",

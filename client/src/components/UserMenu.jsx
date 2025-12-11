@@ -20,7 +20,8 @@ import {
   HiOutlineLogout,
 } from "react-icons/hi";
 import isAdmin from "../utils/isAdmin";
-import isDELV from "../utils/isDelv";
+import isDelv from "../utils/isDelv";
+import isUser from "../utils/isUser";
 
 const UserMenu = ({ close }) => {
   const user = useSelector((state) => state.user);
@@ -137,7 +138,7 @@ const UserMenu = ({ close }) => {
           </Link>
         )}
 
-        
+        {isDelv(user.role) && (
           <Link
             onClick={handleClose}
             to={"/dashboard/deliverOrders"}
@@ -146,7 +147,7 @@ const UserMenu = ({ close }) => {
             <HiOutlineShoppingCart className="text-gray-500" />{" "}
             <span>Deliver Orders</span>
           </Link>
-        
+        )}
 
         {/* Regular User Links */}
         <Link
@@ -157,13 +158,16 @@ const UserMenu = ({ close }) => {
           <HiOutlineClipboardList className="text-gray-500" />{" "}
           <span>My Orders</span>
         </Link>
-        <Link
-          onClick={handleClose}
-          to={"/dashboard/address"}
-          className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
-        >
-          <HiOutlineMap className="text-gray-500" /> <span>Save Address</span>
-        </Link>
+
+        {isUser(user.role) && (
+          <Link
+            onClick={handleClose}
+            to={"/dashboard/address"}
+            className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
+          >
+            <HiOutlineMap className="text-gray-500" /> <span>Save Address</span>
+          </Link>
+        )}
 
         {/* Logout Button */}
         <button
