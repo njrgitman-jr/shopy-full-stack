@@ -20,6 +20,9 @@ import orderRouter from "./route/order.route.js";
 import dashboardRouter from "./route/dashboard.route.js";
 import adminOrderRouter from "./route/admin-order.route.js";
 import deliveryOrderRouter from "./route/delivery-order.route.js";
+import myOrdersRouter from "./route/my-orders.route.js";
+
+
 
 const app = express();
 
@@ -114,6 +117,7 @@ app.use("/api/order", orderRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/admin-orders", adminOrderRouter);
 app.use("/api/delivery-orders", deliveryOrderRouter);
+app.use("/api/my-orders", myOrdersRouter);
 
 // ========= START SERVER =========
 connectDB().then(() => {

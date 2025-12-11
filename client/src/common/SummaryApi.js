@@ -168,7 +168,6 @@ const SummaryApi = {
     method: "get",
   },
 
-
   // ADMIN: Orders management (unique endpoints)
   adminOrderList: {
     url: `${baseURL}/api/admin-orders/list`,
@@ -187,22 +186,21 @@ const SummaryApi = {
     method: "get",
   },
 
-
   //delivery person orders
-deliveryAssignedOrders: {
-  url: `${baseURL}/api/delivery-orders/my-assigned-orders`,
-  method: "GET",
-},
+  deliveryAssignedOrders: {
+    url: `${baseURL}/api/delivery-orders/my-assigned-orders`,
+    method: "GET",
+  },
 
-deliveryUpdateStatus: {
-  url: `${baseURL}/api/delivery-orders/update-delivery-status`,
-  method: "PUT",
-},
+  deliveryUpdateStatus: {
+    url: `${baseURL}/api/delivery-orders/update-delivery-status`,
+    method: "PUT",
+  },
 
-
-
-
-  
+  userMyOrders: {
+    url: `${baseURL}/api/my-orders/user-orders`,
+    method: "GET",
+  },
 };
 
 export default SummaryApi;

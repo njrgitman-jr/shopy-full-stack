@@ -1,3 +1,6 @@
+//frontend routes
+//client/src/route/index.jsx
+
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../pages/Home";
@@ -29,6 +32,7 @@ import DeliverOrders from "../pages/DeliverOrders";
 import AdminOrderPage from "../pages/adminOrderPage";
 import DelvPermision from "../layouts/DelvPermision";
 import UserPermision from "../layouts/UserPermision";
+import UserMyOrders from "../pages/UserMyOrders";
 
 const router = createBrowserRouter([
   {
@@ -97,10 +101,11 @@ const router = createBrowserRouter([
             path: "myorders",
             element: (
               <UserPermision>
-                <MyOrders />
+                <UserMyOrders />
               </UserPermision>
             ),
           },
+
           {
             path: "admin-orders-management", // new unique path
             element: (
