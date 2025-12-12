@@ -1,3 +1,5 @@
+//client/src/layouts/AdminPermision.jsx
+
 import React from 'react'
 import { useSelector } from 'react-redux'
 import isAdmin from '../utils/isAdmin'

@@ -201,6 +201,11 @@ const SummaryApi = {
     url: `${baseURL}/api/my-orders/user-orders`,
     method: "GET",
   },
+  
+  adminDashboard: {
+    url: `${baseURL}/api/admin-dashboard/overview`,
+    method: "get",
+  },
 };
 
 export default SummaryApi;

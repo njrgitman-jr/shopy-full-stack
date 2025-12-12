@@ -3,6 +3,9 @@
 // i proected in src/route index.js
 //#3 03:00:00 very important explaination
 //s = value comming as string format
+
+//client/src/utils/isAdmin.js
+
 const isAdmin = (s) => {
   if (s === "ADMIN") {
     return true; //means this is an admin

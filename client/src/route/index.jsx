@@ -14,7 +14,7 @@ import ResetPassword from "../pages/ResetPassword";
 import UserMenuMobile from "../pages/UserMenuMobile";
 import Profile from "../pages/Profile";
 import Dashboard from "../layouts/Dashboard";
-import MyOrders from "../pages/MyOrders";
+
 import Address from "../pages/Address";
 import CategoryPage from "../pages/CategoryPage";
 import SubCategoryPage from "../pages/SubCategoryPage";
@@ -23,7 +23,7 @@ import ProductAdmin from "../pages/ProductAdmin";
 import AdminPermision from "../layouts/AdminPermision";
 import ProductListPage from "../pages/ProductListPage";
 import ProductDisplayPage from "../pages/ProductDisplayPage";
-import DashBoardAdmin from "../pages/DashBoardAdmin";
+
 import CartMobile from "../pages/CartMobile";
 import CheckoutPage from "../pages/CheckoutPage";
 import Success from "../pages/Success";
@@ -33,6 +33,7 @@ import AdminOrderPage from "../pages/adminOrderPage";
 import DelvPermision from "../layouts/DelvPermision";
 import UserPermision from "../layouts/UserPermision";
 import UserMyOrders from "../pages/UserMyOrders";
+import AdminDashboard from "../pages/adminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,15 @@ const router = createBrowserRouter([
         element: <Dashboard />,
         children: [
           {
+            path: "dashboardAdmin",
+            element: (
+              <AdminPermision>
+                <AdminDashboard />
+              </AdminPermision>
+            ),
+          },
+
+          {
             path: "profile",
             element: <Profile />,
           },
@@ -89,14 +99,6 @@ const router = createBrowserRouter([
             ),
           },
 
-          {
-            path: "dashboardAdmin",
-            element: (
-              <AdminPermision>
-                <DashBoardAdmin />
-              </AdminPermision>
-            ),
-          },
           {
             path: "myorders",
             element: (

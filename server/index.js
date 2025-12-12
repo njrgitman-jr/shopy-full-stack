@@ -1,4 +1,6 @@
 // ====== SERVER ENTRY POINT ======
+//server/index.js
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -17,10 +19,13 @@ import productRouter from "./route/product.route.js";
 import cartRouter from "./route/cart.route.js";
 import addressRouter from "./route/address.route.js";
 import orderRouter from "./route/order.route.js";
-import dashboardRouter from "./route/dashboard.route.js";
+
 import adminOrderRouter from "./route/admin-order.route.js";
 import deliveryOrderRouter from "./route/delivery-order.route.js";
 import myOrdersRouter from "./route/my-orders.route.js";
+
+import adminDashboardRouter from "./route/admin-dashboard.route.js";
+
 
 
 
@@ -114,10 +119,13 @@ app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
-app.use("/api/dashboard", dashboardRouter);
+
 app.use("/api/admin-orders", adminOrderRouter);
 app.use("/api/delivery-orders", deliveryOrderRouter);
 app.use("/api/my-orders", myOrdersRouter);
+
+app.use("/api/admin-dashboard", adminDashboardRouter);
+
 
 // ========= START SERVER =========
 connectDB().then(() => {
