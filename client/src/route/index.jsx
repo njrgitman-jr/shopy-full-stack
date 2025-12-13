@@ -34,6 +34,7 @@ import DelvPermision from "../layouts/DelvPermision";
 import UserPermision from "../layouts/UserPermision";
 import UserMyOrders from "../pages/UserMyOrders";
 import AdminDashboard from "../pages/adminDashboard";
+import AdminUsers from "../pages/AdminUsers";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,15 @@ const router = createBrowserRouter([
             element: (
               <AdminPermision>
                 <AdminDashboard />
+              </AdminPermision>
+            ),
+          },
+
+          {
+            path: "admin-users",
+            element: (
+              <AdminPermision>
+                <AdminUsers />
               </AdminPermision>
             ),
           },

@@ -1,7 +1,6 @@
 //new nothing change test for deploy
 //client/src/components/UserMenu.jsx
 
-
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,10 +19,12 @@ import {
   HiOutlineMap,
   HiOutlineClipboardList,
   HiOutlineLogout,
+  HiOutlineUsers
 } from "react-icons/hi";
 import isAdmin from "../utils/isAdmin";
 import isDelv from "../utils/isDelv";
 import isUser from "../utils/isUser";
+
 
 const UserMenu = ({ close }) => {
   const user = useSelector((state) => state.user);
@@ -89,6 +90,25 @@ const UserMenu = ({ close }) => {
             </span>
           </Link>
         )}
+
+
+
+
+        {isAdmin(user.role) && (
+          <Link
+            to="/dashboard/admin-users"
+            className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
+          >
+            <HiOutlineUsers className="text-xl text-blue-500" />
+            <span>User Management</span>
+          </Link>
+        )}
+
+
+
+
+
+
         {isAdmin(user.role) && (
           <Link
             onClick={handleClose}
@@ -109,16 +129,21 @@ const UserMenu = ({ close }) => {
             <span>Sub Category</span>
           </Link>
         )}
-        {isAdmin(user.role) && (
-          <Link
-            onClick={handleClose}
-            to={"/dashboard/upload-product"}
-            className="px-2 hover:bg-orange-200 py-1"
-          >
-            <HiOutlineShoppingCart className="text-gray-500" />{" "}
-            <span> Upload Product</span>
-          </Link>
-        )}
+
+
+ {isAdmin(user.role) && (
+  <Link
+    onClick={handleClose}
+    to={"/dashboard/upload-product"}
+    className="flex items-center gap-2 px-2 py-1 hover:bg-orange-200"
+  >
+    <HiOutlineShoppingCart className="text-gray-500" />
+    <span>Upload Product</span>
+  </Link>
+)}
+
+
+
         {isAdmin(user.role) && (
           <Link
             onClick={handleClose}

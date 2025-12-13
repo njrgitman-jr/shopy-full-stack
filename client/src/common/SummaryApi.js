@@ -201,9 +201,27 @@ const SummaryApi = {
     url: `${baseURL}/api/my-orders/user-orders`,
     method: "GET",
   },
-  
+
   adminDashboard: {
     url: `${baseURL}/api/admin-dashboard/overview`,
+    method: "get",
+  },
+
+  // ADMIN USERS
+  adminUserList: {
+    url: `${baseURL}/api/admin-users/list`,
+    method: "get",
+  },
+  adminChangeUserRole: {
+    url: `${baseURL}/api/admin-users/change-role`,
+    method: "put",
+  },
+  adminChangeUserStatus: {
+    url: `${baseURL}/api/admin-users/change-status`,
+    method: "put",
+  },
+  adminUserLoginHistory: {
+    url: `${baseURL}/api/admin-users/login-history`,
     method: "get",
   },
 };
