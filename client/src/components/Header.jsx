@@ -1,3 +1,5 @@
+//client/src/components/Header.jsx
+
 import React, { useEffect, useRef, useState } from "react";
 import logoShopyit from "../assets/shopyit5.PNG";
 import Search from "./Search";
@@ -12,7 +14,7 @@ import UserMenu from "./UserMenu";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { useGlobalContext } from "../provider/GlobalProvider";
 import DisplayCartItem from "./DisplayCartItem";
-
+import LanguageSwitcher from "./LanguageSwitcher";
 const Header = () => {
   const [isMobile] = useMobile();
   const location = useLocation();
@@ -115,11 +117,8 @@ const Header = () => {
 
           {/* ----------------- USER + TIME ICON + CART ----------------- */}
           <div className="flex items-center gap-4">
-            {/* 🌗 Show time-based icon (not clickable) */}
-            <div
-              className="flex items-center gap-1 text-lg px-2 text-gray-700 select-none"
-              // title={isDayTime ? "Daytime" : "Nighttime"}
-            >
+            {/* 🌗 Day/Night icon + Language switcher */}
+            <div className="flex items-center gap-2 px-2 text-gray-700 select-none">
               {isDayTime ? (
                 <BsSunFill
                   className="text-yellow-400"
@@ -131,10 +130,11 @@ const Header = () => {
                   size={22}
                 />
               )}
-              {/* <span className="hidden lg:inline text-sm font-medium">
-                {isDayTime ? "Day" : "Night"}
-              </span> */}
+
+              {/* 🌍 Language Switcher */}
+              <LanguageSwitcher />
             </div>
+            
 
             {/* Mobile: user icon */}
             <button

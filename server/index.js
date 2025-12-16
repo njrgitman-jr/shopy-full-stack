@@ -28,10 +28,6 @@ import adminDashboardRouter from "./route/admin-dashboard.route.js";
 import adminUserRouter from "./route/admin-user.route.js";
 
 
-
-
-
-
 const app = express();
 
 // =============================

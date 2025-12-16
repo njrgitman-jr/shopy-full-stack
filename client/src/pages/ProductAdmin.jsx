@@ -128,7 +128,7 @@ const ProductAdmin = () => {
         </div>
 
         {/* Right: Search Input Box */}
-        <div className="flex items-center h-10 w-full sm:w-64 md:w-80 lg:w-[400px] ml-auto bg-blue-50 px-4 gap-3 rounded border focus-within:border-primary-200 relative">
+        <div className="flex items-center h-10 w-full sm:w-64 md:w-80 lg:w-[400px] ms-auto bg-blue-50 px-4 gap-3 rounded border focus-within:border-primary-200 relative">
           <IoSearchOutline size={22} /> {/* Search icon */}
           <input
             type="text"

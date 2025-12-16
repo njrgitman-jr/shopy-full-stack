@@ -82,7 +82,7 @@ const handleSubmit = async (e) => {
           <h1 className="font-semibold">Category</h1>
           <button
             onClick={close}
-            className="w-fit block ml-auto"
+            className="w-fit block ms-auto"
           >
             <IoClose size={25} />
           </button>

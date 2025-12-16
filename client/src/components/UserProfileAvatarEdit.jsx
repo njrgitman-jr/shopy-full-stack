@@ -47,7 +47,7 @@ const UserProfileAvatarEdit = ({ close }) => {
       <div className="bg-white max-w-sm w-full rounded p-4 flex flex-col items-center justify-center">
         <button
           onClick={close}
-          className="text-neutral-800 w-fit block ml-auto"
+          className="text-neutral-800 w-fit block ms-auto"
         >
           <IoClose size={20} />
         </button>

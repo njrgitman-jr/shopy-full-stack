@@ -8,7 +8,7 @@ const ViewImage = ({ url, close, name, category = [], subCategory = [] }) => {
         {/* 🔘 Close button */}
         <button
           onClick={close}
-          className="w-fit ml-auto block mb-3 text-gray-600 hover:text-black"
+          className="w-fit ms-auto block mb-3 text-gray-600 hover:text-black"
         >
           <IoClose size={25} />
         </button>

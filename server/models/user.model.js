@@ -89,6 +89,7 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+     language: { type: String, enum: ["en", "ar"], default: "en" } // ✅ new field
   },
   {
     timestamps: true,
