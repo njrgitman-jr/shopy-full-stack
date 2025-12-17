@@ -118,7 +118,7 @@ export async function loginController(request, response) {
     }
 
     const user = await UserModel.findOne({ email });
-    
+
     if (!user) {
       return response.status(400).json({
         message: "User not registered",
@@ -162,14 +162,15 @@ export async function loginController(request, response) {
       message: "Login successful",
       error: false,
       success: true,
-      data: { accesstoken, refreshToken },
+      data: { accesstoken, refreshToken, language: user.language }, // ✅ send language
     });
   } catch (error) {
     console.error("Login error:", error);
 
     // Detect database connection issues
     const isDbDisconnected =
-      error.name === "MongoNetworkError" || error.message.includes("failed to connect");
+      error.name === "MongoNetworkError" ||
+      error.message.includes("failed to connect");
 
     return response.status(500).json({
       message: isDbDisconnected
@@ -180,94 +181,6 @@ export async function loginController(request, response) {
     });
   }
 }
-
-// export async function loginController(request, response) {
-//   try {
-//     const { email, password } = request.body;
-
-//     if (!email || !password) {
-//       return response.status(400).json({
-//         message: "provide email, password",
-//         error: true,
-//         success: false,
-//       });
-//     }
-
-//     const user = await UserModel.findOne({ email });
-
-//     if (!user) {
-//       return response.status(400).json({
-//         message: "User not register",
-//         error: true,
-//         success: false,
-//       });
-//     }
-
-//     if (user.status !== "Active") {
-//       return response.status(400).json({
-//         message: "Contact to Admin",
-//         error: true,
-//         success: false,
-//       });
-//     }
-
-//     const checkPassword = await bcryptjs.compare(password, user.password);
-
-//     if (!checkPassword) {
-//       return response.status(400).json({
-//         message: "Check your password",
-//         error: true,
-//         success: false,
-//       });
-//     }
-
-//     const accesstoken = await generatedAccessToken(user._id);
-//     const refreshToken = await genertedRefreshToken(user._id);
-
-//     //user alrready passed in login controller method line 120
-//     const updateUser = await UserModel.findByIdAndUpdate(user?._id, {
-//       last_login_date: new Date(),
-//     });
-
-//     // ✅ Update login details
-//     await UserModel.findByIdAndUpdate(user._id, {
-//       last_login_date: new Date(),
-//       $push: {
-//         login_history: {
-//           login_at: new Date(),
-//           ip_address:
-//             request.headers["x-forwarded-for"] || request.socket.remoteAddress,
-//           user_agent: request.headers["user-agent"] || "",
-//         },
-//       },
-//       refresh_token: refreshToken,
-//     });
-
-//     const cookiesOption = {
-//       httpOnly: true,
-//       secure: true,
-//       sameSite: "None",
-//     };
-//     response.cookie("accessToken", accesstoken, cookiesOption);
-//     response.cookie("refreshToken", refreshToken, cookiesOption);
-
-//     return response.json({
-//       message: "Login successfully",
-//       error: false,
-//       success: true,
-//       data: {
-//         accesstoken,
-//         refreshToken,
-//       },
-//     });
-//   } catch (error) {
-//     return response.status(500).json({
-//       message: error.message || error,
-//       error: true,
-//       success: false,
-//     });
-//   }
-// }
 
 //logout controller api
 export async function logoutController(request, response) {
@@ -614,10 +527,6 @@ export async function userDetails(request, response) {
       success: false,
     });
   }
-
-
-  
-
 }
 
 // later i want an API endpoint to view all login times, add:
@@ -640,3 +549,35 @@ export async function getLoginHistory(request, response) {
     });
   }
 }
+
+//API for users to change language after login.//update language API
+export async function updateLanguageController(req, res) {
+  try {
+    const userId = req.userId; // from auth middleware
+    const { language } = req.body;
+
+    if (!["en", "ar"].includes(language)) {
+      return res.status(400).json({
+        message: "Invalid language",
+        success: false,
+        error: true,
+      });
+    }
+
+    await UserModel.findByIdAndUpdate(userId, { language });
+
+    return res.json({
+      message: "Language updated successfully",
+      success: true,
+      error: false,
+      data: { language },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Server error",
+      success: false,
+      error: true,
+    });
+  }
+}
+

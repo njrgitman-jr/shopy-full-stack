@@ -1,12 +1,30 @@
+// client/src/components/LanguageSwitcher.jsx
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import Axios from "../utils/Axios";
+import SummaryApi from "../common/SummaryApi";
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
+  const user = useSelector((state) => state.user);
 
-  const toggleLang = () => {
+  const toggleLang = async () => {
     const newLang = i18n.language === "en" ? "ar" : "en";
+
+    // 1️⃣ Change language instantly (UI)
     i18n.changeLanguage(newLang);
     localStorage.setItem("lang", newLang);
+
+    // 2️⃣ Sync to backend ONLY if logged in
+    if (!user?._id) return;
+    try {
+      await Axios({
+        ...SummaryApi.updateLanguage,
+        data: { language: newLang },
+      });
+    } catch (error) {
+      console.error("Failed to sync language to backend", error);
+    }
   };
 
   return (

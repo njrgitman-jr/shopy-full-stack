@@ -8,6 +8,7 @@ import {
   refreshToken,
   registerUserController,
   resetpassword,
+  updateLanguageController,
   updateUserDetails,
   uploadAvatar,
   userDetails,
@@ -32,6 +33,6 @@ userRouter.put("/verify-forgot-password-otp", verifyForgotPasswordOtp);
 userRouter.put("/reset-password", resetpassword);
 userRouter.post("/refresh-token", refreshToken);
 userRouter.get("/user-details", auth, userDetails); //'endpoint',exported controller name ..also add auth middleware so that user can access the id from middleware
-
+userRouter.put("/update-language", auth, updateLanguageController);
 export default userRouter;
 

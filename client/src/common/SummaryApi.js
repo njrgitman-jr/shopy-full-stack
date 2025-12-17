@@ -224,6 +224,10 @@ const SummaryApi = {
     url: `${baseURL}/api/admin-users/login-history`,
     method: "get",
   },
+  updateLanguage: {
+    url: `${baseURL}/api/user/update-language`,
+    method: "put",
+  },
 };
 
 export default SummaryApi;

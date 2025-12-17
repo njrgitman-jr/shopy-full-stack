@@ -9,6 +9,9 @@ import fetchUserDetails from "../utils/fetchUserDetails";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/userSlice";
 
+// 🌍 i18n
+import i18n from "../i18n";
+
 // ✅ Language Switcher
 import LanguageSwitcher from "../components/LanguageSwitcher";
 
@@ -40,7 +43,6 @@ const Login = () => {
     e.preventDefault();
     if (loading) return;
 
-    // ✅ Internet / Network check BEFORE request
     if (!navigator.onLine) {
       toast.error("No internet connection. Please check your network.");
       return;
@@ -62,9 +64,16 @@ const Login = () => {
       if (response.data?.success) {
         toast.success(response.data.message);
 
+        // 🔐 Tokens
         localStorage.setItem("accesstoken", response.data.data.accesstoken);
         localStorage.setItem("refreshToken", response.data.data.refreshToken);
 
+        // 🌍 ✅ SAVE LANGUAGE (Step 2.2)
+        const language = response.data.data.language || "en";
+        localStorage.setItem("language", language);
+        i18n.changeLanguage(language);
+
+        // 👤 Fetch user
         const userDetails = await fetchUserDetails();
         dispatch(setUserDetails(userDetails.data));
 
@@ -72,13 +81,6 @@ const Login = () => {
         navigate("/", { replace: true });
       }
     } catch (error) {
-      /**
-       * ✅ ERROR HANDLING PRIORITY
-       * 1. No server response → Network / Server down
-       * 2. DB disconnected → backend 500 with message
-       * 3. Other errors
-       */
-
       if (!error.response) {
         toast.error(
           "Unable to reach server. Please check your internet connection."
@@ -109,7 +111,6 @@ const Login = () => {
       </div>
 
       <div className="bg-white my-4 w-full max-w-lg mx-auto rounded p-7">
-        {/* Session expired message */}
         {sessionExpired && (
           <p className="text-red-600 font-bold mb-2">
             Session expired... please login again
