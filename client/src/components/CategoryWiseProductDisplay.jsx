@@ -1,3 +1,5 @@
+//client/src/components/CategoryWiseProductDisplay.jsx
+
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AxiosToastError from "../utils/AxiosToastError";
@@ -38,7 +40,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchCategoryWiseProduct();
   }, []);
 

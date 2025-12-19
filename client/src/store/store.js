@@ -1,3 +1,4 @@
+//client/src/store/store.js
 // ===============================
 // Redux Store Configuration File
 // ===============================

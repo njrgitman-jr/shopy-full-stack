@@ -1,3 +1,5 @@
+//client/src/store/productSlice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialValue = {

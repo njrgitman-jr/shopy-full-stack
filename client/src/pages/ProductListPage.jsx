@@ -1,3 +1,5 @@
+//client/src/pages/ProductListPage.jsx
+
 import React, { useEffect, useState } from "react";
 import Axios from "../utils/Axios"; // Custom Axios instance for API requests
 import SummaryApi from "../common/SummaryApi"; // Object containing API endpoint configs
@@ -43,7 +45,7 @@ const ProductListPage = () => {
           categoryId: categoryId,
           subCategoryId: subCategoryId,
           page: page,
-          limit: 8, // Number of products per page
+          limit: 1000000000, // Number of products per page
         },
       });
 
@@ -82,7 +84,6 @@ const ProductListPage = () => {
   return (
     <section className="sticky top-24 lg:top-20">
       <div className="container sticky top-24  mx-auto grid grid-cols-[90px,1fr]  md:grid-cols-[200px,1fr] lg:grid-cols-[280px,1fr]">
-        
         {/* Subcategory sidebar */}
         <div className="min-h-[88vh] max-h-[88vh] overflow-y-scroll grid gap-1 shadow-md scrollbarCustom bg-white py-2">
           {DisplaySubCatory.map((s, index) => {
@@ -131,8 +132,15 @@ const ProductListPage = () => {
         {/* Product display area */}
         <div className="sticky top-20">
           {/* Subcategory title */}
-          <div className="bg-white shadow-md p-4 z-10">
+          <div className="bg-white shadow-md p-4 z-10 flex items-center justify-between">
             <h3 className="font-semibold">{subCategoryName}</h3>
+
+            {/* TOTAL PRODUCT COUNT */}
+            {!loading && (
+              <span className="text-sm text-gray-500">
+                {totalPage} Items
+              </span>
+            )}
           </div>
 
           <div>

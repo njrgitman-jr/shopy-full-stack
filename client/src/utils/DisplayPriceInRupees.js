@@ -5,9 +5,16 @@
 //     }).format(price)
 // }
 
+// export const DisplayPriceInRupees = (price) => {
+//     return new Intl.NumberFormat('en-US', {
+//         style: 'currency',
+//         currency: 'USD'
+//     }).format(price);
+// }
+
 export const DisplayPriceInRupees = (price) => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    }).format(price);
-}
+  return new Intl.NumberFormat("en-JO", {
+    style: "currency",
+    currency: "JOD",
+  }).format(price);
+};

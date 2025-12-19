@@ -1,3 +1,5 @@
+// client/src/App.jsx
+
 import "./i18n";
 
 import { Outlet, useLocation } from "react-router-dom";

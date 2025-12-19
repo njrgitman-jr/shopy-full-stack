@@ -1,3 +1,5 @@
+//server/controllers/product.controller.js
+
 import ProductModel from "../models/product.model.js";
 
 /**
@@ -187,7 +189,7 @@ export const getProductByCategoryAndSubCategory = async (request, response) => {
     return response.json({
       message: "Product list",
       data: data,
-      totalCount: dataCount,
+      totalCount: dataCount,   // ✅ THIS IS WHAT WE NEED
       page: page,
       limit: limit,
       success: true,

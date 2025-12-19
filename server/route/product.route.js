@@ -1,3 +1,5 @@
+
+//server/route/productroute.js
 //create endpoints for controller methods
 
 import { Router } from "express"; // Import Express Router to create modular route handlers

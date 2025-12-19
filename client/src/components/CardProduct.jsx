@@ -1,3 +1,5 @@
+///client/src/components/
+
 import React from "react";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { Link } from "react-router-dom";
