@@ -661,7 +661,7 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
                       />
                     </div>
 
-                    <input
+                    <textarea
                       id={k}
                       type="text"
                       value={data.more_details[k]}

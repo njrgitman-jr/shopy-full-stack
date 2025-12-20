@@ -1,4 +1,4 @@
-///client/src/components/
+// client/src/components/
 
 import React from "react";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
@@ -60,17 +60,16 @@ const CardProduct = ({ data }) => {
       <div className="px-2 lg:px-0 flex items-center justify-between gap-1 lg:gap-3 text-sm lg:text-base">
         <div className="flex flex-col items-start">
           <div className="flex flex-col">
-  <div className="font-extrabold text-[10px] sm:text-xs lg:text-sm text-green-700 leading-tight">
-    {DisplayPriceInRupees(discountedPrice)}
-  </div>
+            <div className="font-extrabold text-[10px] sm:text-xs lg:text-sm text-green-700 leading-tight">
+              {DisplayPriceInRupees(discountedPrice)}
+            </div>
 
-  {Boolean(data.discount) && (
-    <div className="text-gray-600 line-through text-[10px] sm:text-xs lg:text-sm leading-tight mt-0.5">
-      {DisplayPriceInRupees(data.price)}
-    </div>
-  )}
-</div>
-
+            {Boolean(data.discount) && (
+              <div className="text-gray-600 line-through text-[10px] sm:text-xs lg:text-sm leading-tight mt-0.5">
+                {DisplayPriceInRupees(data.price)}
+              </div>
+            )}
+          </div>
         </div>
 
         <div>

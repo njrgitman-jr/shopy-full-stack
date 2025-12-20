@@ -218,38 +218,41 @@ const UploadProduct = () => {
           {/* Upload Images */}
           <div className="grid gap-1">
             <p className="font-medium">Images</p>
-          <label
-    htmlFor="productImage"
-    onClick={(e) => imageLoading && e.preventDefault()} // 🛑 Prevent clicking while uploading
-    className={`bg-blue-50 h-24 border rounded flex justify-center items-center transition-all duration-200 ${
-      imageLoading
-        ? "opacity-60 cursor-not-allowed pointer-events-none"
-        : "cursor-pointer hover:bg-blue-100"
-    }`}
-  >
-    <div className="text-center flex flex-col items-center">
-      {imageLoading ? (
-        <>
-          <Loading /> {/* 👀 show loader while uploading */}
-          {/* <p className="text-sm text-gray-600 mt-0">Uploading...</p> */}
-        </>
-      ) : (
-        <>
-          <FaCloudUploadAlt size={35} className="text-blue-500" />
-          <p className="text-gray-700">Upload Image</p>
-        </>
-      )}
-    </div>
+            <label
+              htmlFor="productImage"
+              onClick={(e) => imageLoading && e.preventDefault()} // 🛑 Prevent clicking while uploading
+              className={`bg-blue-50 h-24 border rounded flex justify-center items-center transition-all duration-200 ${
+                imageLoading
+                  ? "opacity-60 cursor-not-allowed pointer-events-none"
+                  : "cursor-pointer hover:bg-blue-100"
+              }`}
+            >
+              <div className="text-center flex flex-col items-center">
+                {imageLoading ? (
+                  <>
+                    <Loading /> {/* 👀 show loader while uploading */}
+                    {/* <p className="text-sm text-gray-600 mt-0">Uploading...</p> */}
+                  </>
+                ) : (
+                  <>
+                    <FaCloudUploadAlt
+                      size={35}
+                      className="text-blue-500"
+                    />
+                    <p className="text-gray-700">Upload Image</p>
+                  </>
+                )}
+              </div>
 
-    <input
-      type="file"
-      id="productImage"
-      className="hidden"
-      accept="image/*"
-      onChange={handleUploadImage}
-      disabled={imageLoading} // 🔒 disable while uploading
-    />
-  </label>
+              <input
+                type="file"
+                id="productImage"
+                className="hidden"
+                accept="image/*"
+                onChange={handleUploadImage}
+                disabled={imageLoading} // 🔒 disable while uploading
+              />
+            </label>
 
             {/* Drag & Drop Images */}
             <DragDropContext
@@ -571,7 +574,7 @@ const UploadProduct = () => {
                   }}
                 />
               </label>
-              <input
+              <textarea
                 id={k}
                 value={data.more_details[k]}
                 onChange={(e) =>

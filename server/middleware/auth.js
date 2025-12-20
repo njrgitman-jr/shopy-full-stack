@@ -30,7 +30,7 @@ const auth = async (request, response, next) => {
     next();
   } catch (error) {
     return response.status(500).json({
-      message: "You need to login", ///error.message || error,
+      message: "You must be logged in to post to Cart.", ///error.message || error,
       error: true,
       success: false,
     });
