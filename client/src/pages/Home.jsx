@@ -142,6 +142,7 @@ const Home = () => {
         </div>
       </div>
 {/* 🗂️ Category Grid Section */}
+{/* 🗂️ Category Grid Section */}
 <div className="container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 lg:grid-cols-10 gap-2">
   {loadingCategory
     ? new Array(12).fill(null).map((_, index) => (
@@ -156,21 +157,35 @@ const Home = () => {
     : categoryData.map((cat) => (
         <div
           key={cat._id}
-          className="w-full cursor-pointer"
-          onClick={() => handleRedirectProductListpage(cat._id, cat.name)}
+          className="w-full cursor-pointer group overflow-hidden rounded"
+          onClick={() => {
+            // Delay navigation to let the animation play on mobile
+            setTimeout(() => {
+              handleRedirectProductListpage(cat._id, cat.name);
+            }, 200);
+          }}
         >
           <img
             src={cat.image}
             alt={cat.name}
             className="
-              w-full 
-              h-28 sm:h-auto 
-              object-scale-down
+              w-full
+              h-28 sm:h-auto
+              object-cover
+              transition-transform
+              duration-500
+              ease-out
+              scale-110
+              group-hover:scale-95
+              group-active:scale-95
             "
           />
         </div>
       ))}
 </div>
+
+
+
 
 
       {/* 🛒 Display Category-wise Products */}
