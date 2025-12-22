@@ -141,7 +141,8 @@ const Home = () => {
           ))}
         </div>
       </div>
-{/* 🗂️ Category Grid Section */}
+
+
 {/* 🗂️ Category Grid Section */}
 <div className="container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 lg:grid-cols-10 gap-2">
   {loadingCategory
@@ -159,7 +160,7 @@ const Home = () => {
           key={cat._id}
           className="w-full cursor-pointer group overflow-hidden rounded"
           onClick={() => {
-            // Delay navigation to let the animation play on mobile
+            // Delay navigation slightly so mobile touch animation is visible
             setTimeout(() => {
               handleRedirectProductListpage(cat._id, cat.name);
             }, 200);
@@ -175,14 +176,14 @@ const Home = () => {
               transition-transform
               duration-500
               ease-out
-              scale-110
-              group-hover:scale-95
-              group-active:scale-95
+              sm:scale-100         /* Desktop/tablet normal */
+              active:scale-110     /* Zoom in on mobile touch */
             "
           />
         </div>
       ))}
 </div>
+
 
 
 
