@@ -142,7 +142,6 @@ const Home = () => {
         </div>
       </div>
 
-
 {/* 🗂️ Category Grid Section */}
 <div className="container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 lg:grid-cols-10 gap-2">
   {loadingCategory
@@ -151,19 +150,18 @@ const Home = () => {
           key={index}
           className="bg-white rounded p-4 min-h-36 grid gap-2 shadow animate-pulse"
         >
-          <div className="bg-blue-100 min-h-24 rounded"></div>
+          <div className="bg-blue-100 aspect-square rounded"></div>
           <div className="bg-blue-100 h-8 rounded"></div>
         </div>
       ))
     : categoryData.map((cat) => (
         <div
           key={cat._id}
-          className="w-full cursor-pointer group overflow-hidden rounded"
+          className="w-full cursor-pointer overflow-hidden rounded"
           onClick={() => {
-            // Delay navigation slightly so mobile touch animation is visible
             setTimeout(() => {
               handleRedirectProductListpage(cat._id, cat.name);
-            }, 200);
+            }, 180);
           }}
         >
           <img
@@ -171,18 +169,31 @@ const Home = () => {
             alt={cat.name}
             className="
               w-full
-              h-28 sm:h-auto
+
+              /* 📱 Mobile: same image size */
+              aspect-square
               object-cover
-              transition-transform
-              duration-500
+
+              /* 🖥️ Desktop/tablet: keep existing behavior */
+              sm:aspect-auto
+              sm:h-auto
+              sm:object-cover
+
+              transition-all
+              duration-300
               ease-out
-              sm:scale-100         /* Desktop/tablet normal */
-              active:scale-110     /* Zoom in on mobile touch */
+
+              /* Mobile touch feedback */
+              active:scale-110
+              active:brightness-95
+              active:shadow-inner
             "
           />
         </div>
       ))}
 </div>
+
+
 
 
 
