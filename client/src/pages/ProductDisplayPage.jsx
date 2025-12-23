@@ -58,15 +58,52 @@ const ProductDisplayPage = () => {
 
   console.log("product data", data);
 
+  //Magnify Implementation
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [bgPos, setBgPos] = useState("center");
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setBgPos(`${x}% ${y}%`);
+  };
+
+  const handleMouseLeave = () => {
+    setIsZoomed(false);
+    setBgPos("center"); // IMPORTANT reset
+  };
+  //end Magnify Implementation
+
   return (
     <section className="container mx-auto p-4 grid lg:grid-cols-2">
       {/* Left Section - Product Images */}
       <div>
-        <div className="bg-white lg:min-h-[65vh] lg:max-h-[65vh] rounded min-h-56 max-h-56 h-full w-full">
+        {/* <div className="bg-white lg:min-h-[65vh] lg:max-h-[65vh] rounded min-h-56 max-h-56 h-full w-full">
           <img
             src={data.image[image]}
             alt={data.name}
             className="w-full h-full object-scale-down"
+          />
+        </div> */}
+        <div
+          className="bg-white lg:min-h-[65vh] lg:max-h-[65vh] min-h-56 max-h-56 rounded w-full overflow-hidden relative"
+          onMouseEnter={() => setIsZoomed(true)}
+          onMouseLeave={handleMouseLeave}
+          onMouseMove={handleMouseMove}
+          style={{
+            backgroundImage: isZoomed ? `url(${data.image[image]})` : "none",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: bgPos,
+            backgroundSize: isZoomed ? "220%" : "contain",
+          }}
+        >
+          <img
+            src={data.image[image]}
+            alt={data.name}
+            className={`w-full h-full object-scale-down transition-opacity duration-200 ${
+              isZoomed ? "opacity-0" : "opacity-100"
+            }`}
           />
         </div>
 

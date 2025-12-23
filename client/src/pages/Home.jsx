@@ -142,32 +142,32 @@ const Home = () => {
         </div>
       </div>
 
-{/* 🗂️ Category Grid Section */}
-<div className="container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 lg:grid-cols-10 gap-2">
-  {loadingCategory
-    ? new Array(12).fill(null).map((_, index) => (
-        <div
-          key={index}
-          className="bg-white rounded p-4 min-h-36 grid gap-2 shadow animate-pulse"
-        >
-          <div className="bg-blue-100 aspect-square rounded"></div>
-          <div className="bg-blue-100 h-8 rounded"></div>
-        </div>
-      ))
-    : categoryData.map((cat) => (
-        <div
-          key={cat._id}
-          className="w-full cursor-pointer overflow-hidden rounded"
-          onClick={() => {
-            setTimeout(() => {
-              handleRedirectProductListpage(cat._id, cat.name);
-            }, 180);
-          }}
-        >
-          <img
-            src={cat.image}
-            alt={cat.name}
-            className="
+      {/* 🗂️ Shop Category Grid Section */}
+      <div className="container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-8 lg:grid-cols-10 gap-2">
+        {loadingCategory
+          ? new Array(12).fill(null).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white rounded p-4 min-h-36 grid gap-2 shadow animate-pulse"
+              >
+                <div className="bg-blue-100 aspect-square rounded"></div>
+                <div className="bg-blue-100 h-8 rounded"></div>
+              </div>
+            ))
+          : categoryData.map((cat) => (
+              <div
+                key={cat._id}
+                className="w-full cursor-pointer overflow-hidden rounded"
+                onClick={() => {
+                  setTimeout(() => {
+                    handleRedirectProductListpage(cat._id, cat.name);
+                  }, 180);
+                }}
+              >
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="
               w-full
 
               /* 📱 Mobile: same image size */
@@ -188,17 +188,10 @@ const Home = () => {
               active:brightness-95
               active:shadow-inner
             "
-          />
-        </div>
-      ))}
-</div>
-
-
-
-
-
-
-
+                />
+              </div>
+            ))}
+      </div>
 
       {/* 🛒 Display Category-wise Products */}
       {categoryData?.map((c) => (

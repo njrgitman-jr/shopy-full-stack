@@ -68,10 +68,8 @@ const ProductListPage = () => {
   return (
     <section className="sticky top-24 lg:top-20">
       <div className="container mx-auto grid grid-cols-[90px,1fr] md:grid-cols-[200px,1fr] lg:grid-cols-[280px,1fr]">
-
         {/* ===== SUBCATEGORY SIDEBAR (FIXED) ===== */}
         <div className="min-h-[88vh] max-h-[88vh] overflow-y-scroll flex flex-col shadow-md scrollbarCustom bg-white">
-
           {DisplaySubCatory.map((s) => {
             const link = `/${valideURLConvert(s?.category[0]?.name)}-${
               s?.category[0]?._id
@@ -92,9 +90,8 @@ const ProductListPage = () => {
               >
                 {/* FULL HEIGHT RED ACTIVE LINE */}
                 {isActive && (
-  <div className="absolute right-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-full"></div>
-)}
-
+                  <div className="absolute right-0 top-0 bottom-0 w-1 bg-red-500 rounded-l-full"></div>
+                )}
 
                 {/* IMAGE */}
                 <div className="w-fit max-w-28 mx-auto lg:mx-0 bg-white rounded">
@@ -123,9 +120,7 @@ const ProductListPage = () => {
           <div className="bg-white shadow-md p-4 z-10 flex items-center justify-between">
             <h3 className="font-semibold">{subCategoryName}</h3>
             {!loading && (
-              <span className="text-sm text-gray-500">
-                {totalPage} Items
-              </span>
+              <span className="text-sm text-gray-500">{totalPage} Items</span>
             )}
           </div>
 
@@ -148,10 +143,6 @@ const ProductListPage = () => {
 };
 
 export default ProductListPage;
-
-
-
-
 
 // //client/src/pages/ProductListPage.jsx
 

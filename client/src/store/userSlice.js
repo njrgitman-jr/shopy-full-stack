@@ -1,3 +1,5 @@
+//client/src/userSlice.js
+
 //slice to store all user details when user login and maintain all   #2 4:56:00
 //https://redux-toolkit.js.org/tutorials/quick-start
 
