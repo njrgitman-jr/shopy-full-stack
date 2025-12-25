@@ -1,3 +1,5 @@
+//server/controllers/user.controller.js
+
 import sendEmail from "../config/sendEmail.js";
 import UserModel from "../models/user.model.js";
 import bcryptjs from "bcryptjs";

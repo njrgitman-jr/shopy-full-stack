@@ -10,7 +10,7 @@ const auth = async (request, response, next) => {
 
     if (!token) {
       return response.status(401).json({
-        message: "Provide token, please login again",
+        message: "Provide token/Session time out, please login again",
       });
     }
 

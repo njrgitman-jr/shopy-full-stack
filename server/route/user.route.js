@@ -19,6 +19,8 @@ import {
 import auth from "../middleware/auth.js";
 import upload from "../middleware/multer.js";
 import { admin } from "../middleware/admin.js";
+import { googleEasyLogin } from "../controllers/googleLogin.easy.js";
+
 
 //create endpoints for each method in user.controller.js ... then used in summaryApi.js
 const userRouter = Router();
@@ -34,5 +36,7 @@ userRouter.put("/reset-password", resetpassword);
 userRouter.post("/refresh-token", refreshToken);
 userRouter.get("/user-details", auth, userDetails); //'endpoint',exported controller name ..also add auth middleware so that user can access the id from middleware
 userRouter.put("/update-language", auth, updateLanguageController);
+userRouter.post("/google-login", googleEasyLogin);
+
 export default userRouter;
 

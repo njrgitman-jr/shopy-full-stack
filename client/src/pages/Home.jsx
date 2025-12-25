@@ -1,3 +1,5 @@
+//client/src/pages/Home.jsx
+
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { valideURLConvert } from "../utils/valideURLConvert";

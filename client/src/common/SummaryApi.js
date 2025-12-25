@@ -228,6 +228,10 @@ const SummaryApi = {
     url: `${baseURL}/api/user/update-language`,
     method: "put",
   },
+  googleLogin: {
+    url: `${baseURL}/api/user/google-login`,
+    method: "post",
+  },
 };
 
 export default SummaryApi;

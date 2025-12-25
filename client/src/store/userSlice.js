@@ -4,7 +4,6 @@
 //https://redux-toolkit.js.org/tutorials/quick-start
 
 import { createSlice } from "@reduxjs/toolkit";
-// console.log("zzzzzzzzzzz");
 const initialValue = {
   _id: "",
   name: "",

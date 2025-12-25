@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "provide password"],
+      required: [false, "provide password"],
     },
     avatar: {
       type: String,
@@ -89,7 +89,10 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-     language: { type: String, enum: ["en", "ar"], default: "en" } // ✅ new field
+    
+    language: { type: String, enum: ["en", "ar"], default: "en" }, // ✅ new field
+
+    google_id: { type: String, default: null },
   },
   {
     timestamps: true,
