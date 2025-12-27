@@ -13,7 +13,9 @@ const LanguageSwitcher = () => {
 
     // 1️⃣ Change language instantly (UI)
     i18n.changeLanguage(newLang);
-    localStorage.setItem("lang", newLang);
+    // localStorage.setItem("lang", newLang);   //changed to below
+    localStorage.setItem("language", newLang);
+
 
     // 2️⃣ Sync to backend ONLY if logged in
     if (!user?._id) return;

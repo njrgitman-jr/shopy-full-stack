@@ -6,8 +6,11 @@ import toast from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 import { IoClose } from "react-icons/io5";
 import { useGlobalContext } from "../provider/GlobalProvider";
+import { useTranslation } from "react-i18next";
 
 const AddAddress = ({ close }) => {
+  const { t, i18n } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -45,11 +48,16 @@ const AddAddress = ({ close }) => {
   };
 
   return (
-    <section className="bg-black fixed top-0 left-0 right-0 bottom-0 z-50 bg-opacity-70 h-screen overflow-auto">
+    <section
+      dir={i18n.language === "ar" ? "rtl" : "ltr"}
+      className="bg-black fixed top-0 left-0 right-0 bottom-0 z-50 bg-opacity-70 h-screen overflow-auto"
+    >
       <div className="bg-white p-4 w-full max-w-lg mt-8 mx-auto rounded">
         {/* Header */}
         <div className="flex justify-between items-center gap-4">
-          <h2 className="font-semibold text-lg">Add Address</h2>
+          <h2 className="font-semibold text-lg">
+            {t("addAddress")}
+          </h2>
           <button
             onClick={close}
             className="hover:text-red-500"
@@ -65,16 +73,18 @@ const AddAddress = ({ close }) => {
         >
           {/* Address Line */}
           <div className="grid gap-1">
-            <label htmlFor="addressline">Address Line :</label>
+            <label htmlFor="addressline">
+              {t("addressLine")}
+            </label>
             <input
               type="text"
               id="addressline"
               className="border bg-blue-50 p-2 rounded"
               {...register("addressline", {
-                required: "Address line is required",
+                required: t("addressRequired"),
                 minLength: {
                   value: 5,
-                  message: "Address must be at least 5 characters",
+                  message: t("addressMin"),
                 },
               })}
             />
@@ -87,83 +97,99 @@ const AddAddress = ({ close }) => {
 
           {/* City */}
           <div className="grid gap-1">
-            <label htmlFor="city">City :</label>
+            <label htmlFor="city">{t("city")}</label>
             <input
               type="text"
               id="city"
               className="border bg-blue-50 p-2 rounded"
-              {...register("city", { required: "City is required" })}
+              {...register("city", {
+                required: t("cityRequired"),
+              })}
             />
             {errors.city && (
-              <p className="text-red-500 text-sm">{errors.city.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.city.message}
+              </p>
             )}
           </div>
 
           {/* State */}
           <div className="grid gap-1">
-            <label htmlFor="state">State :</label>
+            <label htmlFor="state">{t("state")}</label>
             <input
               type="text"
               id="state"
               className="border bg-blue-50 p-2 rounded"
-              {...register("state", { required: "State is required" })}
+              {...register("state", {
+                required: t("stateRequired"),
+              })}
             />
             {errors.state && (
-              <p className="text-red-500 text-sm">{errors.state.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.state.message}
+              </p>
             )}
           </div>
 
           {/* Pincode */}
           <div className="grid gap-1">
-            <label htmlFor="pincode">Pincode :</label>
+            <label htmlFor="pincode">{t("pincode")}</label>
             <input
               type="text"
               id="pincode"
               className="border bg-blue-50 p-2 rounded"
               {...register("pincode", {
-                required: "Pincode is required",
+                required: t("pincodeRequired"),
                 pattern: {
                   value: /^[0-9]{4,10}$/,
-                  message: "Pincode must be numeric (4–10 digits)",
+                  message: t("pincodeInvalid"),
                 },
               })}
             />
             {errors.pincode && (
-              <p className="text-red-500 text-sm">{errors.pincode.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.pincode.message}
+              </p>
             )}
           </div>
 
           {/* Country */}
           <div className="grid gap-1">
-            <label htmlFor="country">Country :</label>
+            <label htmlFor="country">{t("country")}</label>
             <input
               type="text"
               id="country"
               className="border bg-blue-50 p-2 rounded"
-              {...register("country", { required: "Country is required" })}
+              {...register("country", {
+                required: t("countryRequired"),
+              })}
             />
             {errors.country && (
-              <p className="text-red-500 text-sm">{errors.country.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.country.message}
+              </p>
             )}
           </div>
 
           {/* Mobile */}
           <div className="grid gap-1">
-            <label htmlFor="mobile">Mobile No. :</label>
+            <label htmlFor="mobile">{t("mobile")}</label>
             <input
               type="text"
               id="mobile"
               className="border bg-blue-50 p-2 rounded"
               {...register("mobile", {
-                required: "Mobile number is required",
+                required: t("mobileRequired"),
                 pattern: {
                   value: /^[0-9]{8,15}$/,
-                  message: "Enter a valid mobile number (8–15 digits)",
+                  message: t("mobileInvalid"),
                 },
               })}
             />
             {errors.mobile && (
-              <p className="text-red-500 text-sm">{errors.mobile.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.mobile.message}
+              </p>
             )}
           </div>
 
@@ -172,7 +198,7 @@ const AddAddress = ({ close }) => {
             type="submit"
             className="bg-primary-200 w-full py-2 font-semibold mt-4 hover:bg-primary-100 rounded"
           >
-            Submit
+            {t("submit")}
           </button>
         </form>
       </div>
@@ -181,3 +207,190 @@ const AddAddress = ({ close }) => {
 };
 
 export default AddAddress;
+
+
+
+
+// import React from "react";
+// import { useForm } from "react-hook-form";
+// import Axios from "../utils/Axios";
+// import SummaryApi from "../common/SummaryApi";
+// import toast from "react-hot-toast";
+// import AxiosToastError from "../utils/AxiosToastError";
+// import { IoClose } from "react-icons/io5";
+// import { useGlobalContext } from "../provider/GlobalProvider";
+
+// const AddAddress = ({ close }) => {
+//   const {
+//     register,
+//     handleSubmit,
+//     reset,
+//     formState: { errors },
+//   } = useForm();
+
+//   const { fetchAddress } = useGlobalContext();
+
+//   const onSubmit = async (data) => {
+//     try {
+//       const response = await Axios({
+//         ...SummaryApi.createAddress,
+//         data: {
+//           address_line: data.addressline,
+//           city: data.city,
+//           state: data.state,
+//           country: data.country,
+//           pincode: data.pincode,
+//           mobile: data.mobile,
+//         },
+//       });
+
+//       const { data: responseData } = response;
+
+//       if (responseData.success) {
+//         toast.success(responseData.message);
+//         reset();
+//         fetchAddress();
+//         if (close) close();
+//       }
+//     } catch (error) {
+//       AxiosToastError(error);
+//     }
+//   };
+
+//   return (
+//     <section className="bg-black fixed top-0 left-0 right-0 bottom-0 z-50 bg-opacity-70 h-screen overflow-auto">
+//       <div className="bg-white p-4 w-full max-w-lg mt-8 mx-auto rounded">
+//         {/* Header */}
+//         <div className="flex justify-between items-center gap-4">
+//           <h2 className="font-semibold text-lg">Add Address</h2>
+//           <button
+//             onClick={close}
+//             className="hover:text-red-500"
+//           >
+//             <IoClose size={25} />
+//           </button>
+//         </div>
+
+//         {/* Form */}
+//         <form
+//           className="mt-4 grid gap-4"
+//           onSubmit={handleSubmit(onSubmit)}
+//         >
+//           {/* Address Line */}
+//           <div className="grid gap-1">
+//             <label htmlFor="addressline">Address Line :</label>
+//             <input
+//               type="text"
+//               id="addressline"
+//               className="border bg-blue-50 p-2 rounded"
+//               {...register("addressline", {
+//                 required: "Address line is required",
+//                 minLength: {
+//                   value: 5,
+//                   message: "Address must be at least 5 characters",
+//                 },
+//               })}
+//             />
+//             {errors.addressline && (
+//               <p className="text-red-500 text-sm">
+//                 {errors.addressline.message}
+//               </p>
+//             )}
+//           </div>
+
+//           {/* City */}
+//           <div className="grid gap-1">
+//             <label htmlFor="city">City :</label>
+//             <input
+//               type="text"
+//               id="city"
+//               className="border bg-blue-50 p-2 rounded"
+//               {...register("city", { required: "City is required" })}
+//             />
+//             {errors.city && (
+//               <p className="text-red-500 text-sm">{errors.city.message}</p>
+//             )}
+//           </div>
+
+//           {/* State */}
+//           <div className="grid gap-1">
+//             <label htmlFor="state">State :</label>
+//             <input
+//               type="text"
+//               id="state"
+//               className="border bg-blue-50 p-2 rounded"
+//               {...register("state", { required: "State is required" })}
+//             />
+//             {errors.state && (
+//               <p className="text-red-500 text-sm">{errors.state.message}</p>
+//             )}
+//           </div>
+
+//           {/* Pincode */}
+//           <div className="grid gap-1">
+//             <label htmlFor="pincode">Pincode :</label>
+//             <input
+//               type="text"
+//               id="pincode"
+//               className="border bg-blue-50 p-2 rounded"
+//               {...register("pincode", {
+//                 required: "Pincode is required",
+//                 pattern: {
+//                   value: /^[0-9]{4,10}$/,
+//                   message: "Pincode must be numeric (4–10 digits)",
+//                 },
+//               })}
+//             />
+//             {errors.pincode && (
+//               <p className="text-red-500 text-sm">{errors.pincode.message}</p>
+//             )}
+//           </div>
+
+//           {/* Country */}
+//           <div className="grid gap-1">
+//             <label htmlFor="country">Country :</label>
+//             <input
+//               type="text"
+//               id="country"
+//               className="border bg-blue-50 p-2 rounded"
+//               {...register("country", { required: "Country is required" })}
+//             />
+//             {errors.country && (
+//               <p className="text-red-500 text-sm">{errors.country.message}</p>
+//             )}
+//           </div>
+
+//           {/* Mobile */}
+//           <div className="grid gap-1">
+//             <label htmlFor="mobile">Mobile No. :</label>
+//             <input
+//               type="text"
+//               id="mobile"
+//               className="border bg-blue-50 p-2 rounded"
+//               {...register("mobile", {
+//                 required: "Mobile number is required",
+//                 pattern: {
+//                   value: /^[0-9]{8,15}$/,
+//                   message: "Enter a valid mobile number (8–15 digits)",
+//                 },
+//               })}
+//             />
+//             {errors.mobile && (
+//               <p className="text-red-500 text-sm">{errors.mobile.message}</p>
+//             )}
+//           </div>
+
+//           {/* Submit Button */}
+//           <button
+//             type="submit"
+//             className="bg-primary-200 w-full py-2 font-semibold mt-4 hover:bg-primary-100 rounded"
+//           >
+//             Submit
+//           </button>
+//         </form>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default AddAddress;

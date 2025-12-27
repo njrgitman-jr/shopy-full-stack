@@ -7,6 +7,8 @@ import router from "./route/index";
 import { Provider } from "react-redux";
 import { store } from "./store/store.js";
 import GlobalProvider from "./provider/GlobalProvider";
+import "./i18n";
+
 
 // ✅ Google OAuth
 import { GoogleOAuthProvider } from "@react-oauth/google";

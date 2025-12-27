@@ -1,4 +1,3 @@
-// client/src/pages/login.jsx
 import React, { useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa6";
 import toast from "react-hot-toast";
@@ -10,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/userSlice";
 
 // 🌍 i18n
+import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 
 // ✅ Language Switcher
@@ -19,6 +19,8 @@ import LanguageSwitcher from "../components/LanguageSwitcher";
 import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
+  const { t } = useTranslation(); // ✅ REQUIRED
+
   const [data, setData] = useState({ email: "", password: "" });
   const location = useLocation();
   const sessionExpired = new URLSearchParams(location.search).get(
@@ -41,8 +43,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
+
     if (!navigator.onLine) {
-      toast.error("No internet connection. Please check your network.");
+      toast.error(t("noInternet"));
       return;
     }
 
@@ -77,7 +80,7 @@ const Login = () => {
       }
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
+        error.response?.data?.message || t("loginFailed")
       );
     } finally {
       setLoading(false);
@@ -85,40 +88,37 @@ const Login = () => {
   };
 
   // 🌟 Google Login
-const handleGoogleLogin = async (res) => {
-  try {
-    if (!res || !res.credential) {
-      toast.error("Google credential not received. Check client ID & origin.");
-      return;
+  const handleGoogleLogin = async (res) => {
+    try {
+      if (!res || !res.credential) {
+        toast.error(t("googleCredentialError"));
+        return;
+      }
+
+      const response = await Axios({
+        ...SummaryApi.googleLogin,
+        data: { credential: res.credential },
+      });
+
+      if (!response.data?.success) {
+        toast.error(response.data.message || t("googleLoginFailed"));
+        return;
+      }
+
+      localStorage.setItem("accesstoken", response.data.data.accesstoken);
+      localStorage.setItem("refreshToken", response.data.data.refreshToken);
+      localStorage.setItem("language", response.data.data.language || "en");
+      i18n.changeLanguage(response.data.data.language || "en");
+
+      const user = await fetchUserDetails();
+      dispatch(setUserDetails(user.data));
+
+      toast.success(t("googleLoginSuccess"));
+      navigate("/", { replace: true });
+    } catch (err) {
+      toast.error(err.response?.data?.message || t("googleLoginFailed"));
     }
-
-    const response = await Axios({
-      ...SummaryApi.googleLogin,
-      data: { credential: res.credential },
-    });
-
-    if (!response.data?.success) {
-      toast.error(response.data.message || "Google login failed");
-      return;
-    }
-
-    localStorage.setItem("accesstoken", response.data.data.accesstoken);
-    localStorage.setItem("refreshToken", response.data.data.refreshToken);
-    localStorage.setItem("language", response.data.data.language || "en");
-    i18n.changeLanguage(response.data.data.language || "en");
-
-    const user = await fetchUserDetails();
-    dispatch(setUserDetails(user.data));
-
-    toast.success("Logged in with Google");
-    navigate("/", { replace: true });
-  } catch (err) {
-    console.error("Google login error:", err.response?.data || err);
-    toast.error(err.response?.data?.message || "Google login failed");
-  }
-};
-
-
+  };
 
   return (
     <section className="w-full container mx-auto px-2">
@@ -130,19 +130,18 @@ const handleGoogleLogin = async (res) => {
       <div className="bg-white my-4 w-full max-w-lg mx-auto rounded p-7">
         {sessionExpired && (
           <p className="text-red-600 font-bold mb-2">
-            Session expired... please login again
+            {t("sessionExpired")}
           </p>
         )}
 
-        <p className="font-semibold mb-2">Login to Shopyit (Preview 2)</p>
+        <p className="font-semibold mb-2">
+          {t("loginTo")}
+        </p>
 
         {/* 🔐 Email / Password Login */}
-        <form
-          className="grid gap-4 py-4"
-          onSubmit={handleSubmit}
-        >
+        <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
           <div className="grid gap-1">
-            <label htmlFor="email">Email :</label>
+            <label htmlFor="email">{t("email")} :</label>
             <input
               type="email"
               id="email"
@@ -150,13 +149,13 @@ const handleGoogleLogin = async (res) => {
               name="email"
               value={data.email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder={t("enterEmail")}
               autoComplete="email"
             />
           </div>
 
           <div className="grid gap-1">
-            <label htmlFor="password">Password :</label>
+            <label htmlFor="password">{t("password")} :</label>
             <div className="bg-blue-50 p-2 border rounded flex items-center focus-within:border-primary-200">
               <input
                 type={showPassword ? "text" : "password"}
@@ -165,7 +164,7 @@ const handleGoogleLogin = async (res) => {
                 name="password"
                 value={data.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
+                placeholder={t("enterPassword")}
                 autoComplete="current-password"
               />
               <div
@@ -177,10 +176,10 @@ const handleGoogleLogin = async (res) => {
             </div>
 
             <Link
-              to={"/forgot-password"}
+              to="/forgot-password"
               className="block ms-auto hover:text-primary-200"
             >
-              Forgot password ?
+              {t("forgotPassword")}
             </Link>
           </div>
 
@@ -188,27 +187,27 @@ const handleGoogleLogin = async (res) => {
             disabled={!validValue || loading}
             className={`${
               validValue ? "bg-green-800 hover:bg-green-700" : "bg-gray-500"
-            } text-white py-2 rounded font-semibold my-0 tracking-wide`}
+            } text-white py-2 rounded font-semibold tracking-wide`}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t("loggingIn") : t("login")}
           </button>
         </form>
 
         {/* 🔵 Google Login */}
-        <div className="flex justify-center my-0">
+        <div className="flex justify-center mt-5">
           <GoogleLogin
             onSuccess={handleGoogleLogin}
-            onError={() => toast.error("Google login failed")}
+            onError={() => toast.error(t("googleLoginFailed"))}
           />
         </div>
 
-        <p className="text-center">
-          Don't have account?{" "}
+        <p className="text-center mt-4">
+          {t("noAccount")}{" "}
           <Link
-            to={"/register"}
+            to="/register"
             className="font-semibold text-green-700 hover:text-green-800"
           >
-            Register
+            {t("register")}
           </Link>
         </p>
       </div>

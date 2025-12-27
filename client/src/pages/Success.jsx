@@ -1,13 +1,22 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Success = () => {
+  const { t, i18n } = useTranslation();
   const location = useLocation();
-  const successText = location?.state?.text || "Payment";
+
+  // Use only known translation keys, fallback to "payment"
+  // Prevent passing arbitrary strings
+  const successKey = location?.state?.textKey || "payment"; // <-- pass "payment" from previous page
+  const successText = t(successKey);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 px-4">
+    <div
+      dir={i18n.language === "ar" ? "rtl" : "ltr"}
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 px-4"
+    >
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md flex flex-col items-center gap-6 text-center">
         {/* Icon */}
         <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-600 animate-bounce">
@@ -16,14 +25,14 @@ const Success = () => {
 
         {/* Title */}
         <h1 className="text-2xl font-bold text-green-700">
-          {successText} Successfully 🎉
+          {successText} {t("successfully")}
         </h1>
 
         {/* Description */}
         <p className="text-gray-600 text-sm">
-          Thank you! Your transaction was completed successfully.
+          {t("successMessageLine1")}
           <br />
-          You’ll receive confirmation details shortly.
+          {t("successMessageLine2")}
         </p>
 
         {/* Home Button */}
@@ -31,7 +40,7 @@ const Success = () => {
           to="/"
           className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
         >
-          Go To Home
+          {t("goHome")}
         </Link>
       </div>
     </div>
@@ -39,3 +48,49 @@ const Success = () => {
 };
 
 export default Success;
+
+
+
+
+
+// import React from "react";
+// import { Link, useLocation } from "react-router-dom";
+// import { CheckCircle2 } from "lucide-react";
+
+// const Success = () => {
+//   const location = useLocation();
+//   const successText = location?.state?.text || "Payment";
+
+//   return (
+//     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 px-4">
+//       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md flex flex-col items-center gap-6 text-center">
+//         {/* Icon */}
+//         <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 text-green-600 animate-bounce">
+//           <CheckCircle2 size={48} />
+//         </div>
+
+//         {/* Title */}
+//         <h1 className="text-2xl font-bold text-green-700">
+//           {successText} Successfully 🎉
+//         </h1>
+
+//         {/* Description */}
+//         <p className="text-gray-600 text-sm">
+//           Thank you! Your transaction was completed successfully.
+//           <br />
+//           You’ll receive confirmation details shortly.
+//         </p>
+
+//         {/* Home Button */}
+//         <Link
+//           to="/"
+//           className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+//         >
+//           Go To Home
+//         </Link>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Success;
